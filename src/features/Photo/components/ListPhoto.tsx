@@ -4,33 +4,163 @@ import Checkbox from "@mui/material/Checkbox";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
 import usePhotos from "../../../hooks/usePhotos";
+import { useRemovePhoto } from "../../../hooks/useRemovePhoto";
+import { toast } from "react-toastify";
 
-export interface IListPhotoProps {}
+export interface IListPhotoProps {
+  selected: boolean;
+  handleChangeSelect: (selected: boolean) => void;
+}
 
-const ListPhoto = (props: IListPhotoProps, ref: any) => {
+const InputCheckbox = React.memo(
+  ({ control, setValue, selected, removeSelected, id }: any) => {
+    React.useEffect(() => {
+      if (selected) {
+        setValue(`photos[${id}]`, selected);
+      }
+    }, [selected, setValue, id]);
+
+    React.useEffect(() => {
+      if (removeSelected) {
+        setValue(`photos[${id}]`, false);
+      }
+    }, [removeSelected, setValue, id]);
+
+    return (
+      <Controller
+        control={control}
+        name={`photos[${id}]`}
+        defaultValue={selected}
+        render={({
+          field: { onChange, onBlur, value, name, ref },
+          fieldState: { invalid, isTouched, isDirty, error },
+          formState,
+        }) => {
+          return (
+            <Checkbox
+              color="primary"
+              onBlur={onBlur}
+              onChange={(e) => {
+                onChange(e);
+              }}
+              checked={value}
+              inputRef={ref}
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: "10px",
+                color: "white",
+                "&.Mui-checked": {
+                  color: "white",
+                },
+              }}
+            />
+          );
+        }}
+      />
+    );
+  }
+);
+
+const ListPhoto = (
+  { selected, handleChangeSelect }: IListPhotoProps,
+  ref: any
+) => {
   const { data, isLoading } = usePhotos({ ordering: "-id" });
   const buttonRef = React.useRef<any>(null);
+  const { control, setValue, handleSubmit } = useForm();
+  const listCheck = useWatch({ control, name: `photos` });
+  const toastId = React.useRef<any>(null);
+  const mutation = useRemovePhoto();
+
+  React.useEffect(() => {
+    if (listCheck) {
+      const quantity = listCheck.reduce(
+        (quantity: number, item: any, index: number) => {
+          if (item) {
+            return quantity + 1;
+          } else {
+            return quantity;
+          }
+        },
+        0
+      );
+      if (quantity === data?.length) {
+        handleChangeSelect(true);
+      } else {
+        handleChangeSelect(false);
+      }
+    }
+  }, [listCheck, data, handleChangeSelect]);
 
   React.useImperativeHandle(
     ref,
     () => ({
-      handleButton,
+      handleButton: () => {
+        buttonRef.current.click();
+      },
+      handleRemoveSelectAll: () => {
+        if (data) {
+          data.forEach((item: any) => {
+            setValue(`photos[${item.id}]`, false);
+          });
+        }
+      },
     }),
-    []
+    [data, setValue]
   );
 
-  const { register, handleSubmit } = useForm();
+  const updateAfterRemove = React.useCallback(() => {
+    if (data) {
+      data.forEach((item: any) => {
+        setValue(`photos[${item.id}]`, false);
+      });
+    }
+  }, [data, setValue]);
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
-
-  const handleButton = () => {
-    buttonRef.current.click();
-  };  
+  const onSubmit = React.useCallback(
+    (data: any) => {
+      (async () => {
+        toastId.current = toast("🦄 Đang xóa hình ảnh", { autoClose: false });
+        try {
+          if (data.photos) {
+            const dataRemove = data.photos.reduce(
+              (dataRemove: any, item: any, index: number) => {
+                if (item) {
+                  dataRemove.push({ id: index });
+                }
+                return dataRemove;
+              },
+              []
+            );
+            await mutation.mutateAsync(dataRemove);
+            updateAfterRemove();
+            toast.update(toastId.current, {
+              render: "🦄 Xóa hình ảnh thành công",
+              autoClose: 5000,
+              type: toast.TYPE.SUCCESS,
+            });
+          } else {
+            toast.update(toastId.current, {
+              render: "🦄 Xin vui lòng chọn hình ảnh",
+              autoClose: 5000,
+              type: toast.TYPE.WARNING,
+            });
+          }
+        } catch (e) {
+          toast.update(toastId.current, {
+            render: "🦄 Xóa hình ảnh thất bại",
+            autoClose: 5000,
+            type: toast.TYPE.ERROR,
+          });
+        }
+      })();
+    },
+    [mutation, updateAfterRemove]
+  );
 
   return (
     <>
@@ -57,7 +187,18 @@ const ListPhoto = (props: IListPhotoProps, ref: any) => {
           >
             <form onSubmit={handleSubmit(onSubmit)}>
               {data && (
-                <ImageList variant="standard" cols={6} gap={12}>
+                <ImageList
+                  variant="standard"
+                  gap={12}
+                  sx={{
+                    gridTemplateColumns: {
+                      xs: "repeat(1, 1fr)!important",
+                      md: "repeat(2, 1fr)!important",
+                      lg: "repeat(4, 1fr)!important",
+                      xl: "repeat(6, 1fr)!important",
+                    },
+                  }}
+                >
                   {data.map((item: any, index: number) => (
                     <ImageListItem
                       key={index}
@@ -95,15 +236,11 @@ const ListPhoto = (props: IListPhotoProps, ref: any) => {
                           transition: "all 0.5s linear",
                         }}
                       />
-                      <Checkbox
-                        color="primary"
-                        {...register(`photo[${item.id}]`)}
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: "10px",
-                          color: "white",
-                        }}
+                      <InputCheckbox
+                        id={item.id}
+                        selected={selected}
+                        control={control}
+                        setValue={setValue}
                       />
                     </ImageListItem>
                   ))}

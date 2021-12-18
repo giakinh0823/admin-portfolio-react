@@ -2,5 +2,5 @@ import { useMutation } from "react-query";
 import photoApi from "../api/photoApi";
 
 export function useUpload() {
-  return useMutation((data: any) => photoApi.add(data));
+  return useMutation(async (data: any) => await photoApi.add(data));
 }

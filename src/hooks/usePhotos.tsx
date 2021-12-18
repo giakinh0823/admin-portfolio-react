@@ -4,5 +4,5 @@ import { ListParams } from "../models/common";
 
 
 export default function usePhotos(params: ListParams) {
-  return useQuery("photos", () => photoApi.getAll(params));
+  return useQuery("photos", async () => await photoApi.getAll(params));
 }

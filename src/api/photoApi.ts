@@ -23,8 +23,12 @@ const blogApi = {
     });
   },
   remove(id: string): Promise<Photo> {
-    const url = `/photos/${id}`;
+    const url = `/upload/${id}`;
     return axiosClient.delete(url);
+  },
+  removeAll(data: any): Promise<Photo> {
+    const url = `/upload/remove/`;
+    return axiosClient.post(url, data);
   },
   update(data: Partial<Photo>): Promise<Photo> {
     const url = `/photos/${data.id}`;
