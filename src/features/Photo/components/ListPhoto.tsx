@@ -5,10 +5,12 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import * as React from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { toast } from "react-toastify";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
+import { useDeletePhoto } from "../../../hooks/useDeltePhoto";
 import usePhotos from "../../../hooks/usePhotos";
 import { useRemovePhoto } from "../../../hooks/useRemovePhoto";
-import { toast } from "react-toastify";
+import ImagePreview from "./ImagePreview";
 
 export interface IListPhotoProps {
   selected: boolean;
@@ -74,7 +76,62 @@ const ListPhoto = (
   const { control, setValue, handleSubmit } = useForm();
   const listCheck = useWatch({ control, name: `photos` });
   const toastId = React.useRef<any>(null);
-  const mutation = useRemovePhoto();
+  const mutationRemove = useRemovePhoto();
+  const mutationDelete = useDeletePhoto()
+  const [open, setOpen] = React.useState<any>(false);
+  const [image, setImage] = React.useState<any>(null);
+
+  const onClose = () => {
+    setOpen(false);
+  }
+
+  const onOpen = (image: any) => {
+    setImage(image);
+    setOpen(true)
+  }
+
+  
+  const updateAfterRemove = React.useCallback(() => {
+    if (data) {
+      data.forEach((item: any) => {
+        setValue(`photos[${item.id}]`, false);
+      });
+    }
+  }, [data, setValue]);
+
+  const handleDelete = React.useCallback(
+    () => {
+      (async () => {
+        toastId.current = toast("🦄 Đang xóa hình ảnh", { autoClose: false });
+        try {
+          if (image) {
+            await mutationDelete.mutateAsync(image.id);
+            updateAfterRemove();
+            toast.update(toastId.current, {
+              render: "🦄 Xóa hình ảnh thành công",
+              autoClose: 5000,
+              type: toast.TYPE.SUCCESS,
+            });
+            onClose();
+          } else {
+            toast.update(toastId.current, {
+              render: "🦄 Xin vui lòng chọn hình ảnh",
+              autoClose: 5000,
+              type: toast.TYPE.WARNING,
+            });
+          }
+        } catch (e) {
+          toast.update(toastId.current, {
+            render: "🦄 Xóa hình ảnh thất bại",
+            autoClose: 5000,
+            type: toast.TYPE.ERROR,
+          });
+        }
+      })();
+    },
+    [image, mutationDelete, updateAfterRemove]
+  );
+
 
   React.useEffect(() => {
     if (listCheck) {
@@ -113,13 +170,6 @@ const ListPhoto = (
     [data, setValue]
   );
 
-  const updateAfterRemove = React.useCallback(() => {
-    if (data) {
-      data.forEach((item: any) => {
-        setValue(`photos[${item.id}]`, false);
-      });
-    }
-  }, [data, setValue]);
 
   const onSubmit = React.useCallback(
     (data: any) => {
@@ -136,7 +186,7 @@ const ListPhoto = (
               },
               []
             );
-            await mutation.mutateAsync(dataRemove);
+            await mutationRemove.mutateAsync(dataRemove);
             updateAfterRemove();
             toast.update(toastId.current, {
               render: "🦄 Xóa hình ảnh thành công",
@@ -159,7 +209,7 @@ const ListPhoto = (
         }
       })();
     },
-    [mutation, updateAfterRemove]
+    [mutationRemove, updateAfterRemove]
   );
 
   return (
@@ -217,6 +267,7 @@ const ListPhoto = (
                           },
                         },
                       }}
+                      onClick={() => onOpen(item)}
                     >
                       <img
                         src={`${item.url}`}
@@ -255,6 +306,7 @@ const ListPhoto = (
           </Box>
         </>
       )}
+      <ImagePreview image={image} onClose={onClose} open={open} handleRemove={handleDelete}/>
     </>
   );
 };

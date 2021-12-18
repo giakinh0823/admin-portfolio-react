@@ -10,13 +10,10 @@ export interface IImagePreviewProps {
   image: any;
   open: boolean;
   onClose: any;
+  handleRemove?: any
 }
 
-export default function ImagePreview({
-  image,
-  open,
-  onClose,
-}: IImagePreviewProps) {
+const ImagePreview = ({ image, open, onClose,handleRemove }: IImagePreviewProps) => {
   return (
     <>
       <Dialog
@@ -28,9 +25,9 @@ export default function ImagePreview({
           top: "200px",
         }}
       >
-        <DialogTitle id="alert-dialog-title">{"Tải hình ảnh lên"}</DialogTitle>
-        <DialogContent sx={{ maxWidth: "600px", minWidth: "500px" }}>
-          {image ? (
+        <DialogTitle id="alert-dialog-title">{"Hình ảnh"}</DialogTitle>
+        <DialogContent sx={{ maxWidth: "1200px" }}>
+          {image && (
             <Box
               sx={{
                 display: "flex",
@@ -41,24 +38,31 @@ export default function ImagePreview({
                 position: "relative",
               }}
             >
-              
+              <img
+                src={image?.url}
+                srcSet={image?.url}
+                alt={"preview"}
+                loading="lazy"
+                style={{ maxWidth: "100%" }}
+              />
             </Box>
-          ) : (
-            <Box
-              sx={{
-                display: "flex",
-                minHeight: "300px",
-                justifyContent: "center",
-                alignItems: "center",
-                border: "2px  dashed #000",
-              }}
-            ></Box>
           )}
         </DialogContent>
         <DialogActions>
+          <ButtonPrimary
+            onClick={handleRemove}
+            color="error.main"
+            darkColor="#e90d37"
+            lightColor="#ff2f57"
+            boxShadow="rgb(255 23 68 / 30%) 0px 12px 14px 0px"
+          >
+            Remove
+          </ButtonPrimary>
           <ButtonPrimary onClick={onClose}>Thoát</ButtonPrimary>
         </DialogActions>
       </Dialog>
     </>
   );
-}
+};
+
+export default ImagePreview;
