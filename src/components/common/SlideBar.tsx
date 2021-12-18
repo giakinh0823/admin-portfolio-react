@@ -6,110 +6,155 @@ import * as React from "react";
 import { NavLink } from "react-router-dom";
 import avatarImage from "../../assets/images/avatar.jpg";
 import { ROUTER_LIST } from "./ROUTER_LIST";
+import CloseIcon from "@mui/icons-material/Close";
+import Backdrop from "@mui/material/Backdrop";
 
-export interface SidebarProps {}
+export interface SidebarProps {
+  showSlideBar: boolean;
+  onCloseShowSlide?: any;
+}
 
-const Sidebar = (props: SidebarProps) => {
+const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
   return (
-    <Drawer
-      open
-      variant="persistent"
-      hideBackdrop={true}
-      ModalProps={{
-        keepMounted: true, // Better open performance on mobile.
-      }}
-      sx={{
-        "& .MuiDrawer-paper": {
-          boxSizing: "border-box",
-          width: "280px",
-          position: "static",
-          borderRight: "0.5px solid #e8e8e8",
-          minHeight: "95vh",
-        },
-      }}
-    >
-      <Box>
-        <Box sx={{ display: "flex", justifyContent: "center" }} mt={5}>
-          <Avatar
-            alt="Remy Sharp"
-            src={avatarImage}
-            sx={{ width: 120, height: 120 }}
-          />
-        </Box>
-        <Box>
-          <Typography
-            variant="h6"
-            gutterBottom
-            textAlign="center"
-            fontWeight="600"
-            mb={0}
-            mt={3}
-          >
-            Hà Gia Kính
-          </Typography>
-          <Typography
-            variant="body1"
-            gutterBottom
-            textAlign="center"
-            fontSize="14px"
-          >
-            Code để thành công
-          </Typography>
-        </Box>
-      </Box>
-      <Box
+    <>
+      <Drawer
+        open={showSlideBar}
+        variant="persistent"
+        onClose={() => onCloseShowSlide()}
+        anchor="left"
+        ModalProps={{
+          keepMounted: true,
+        }}
         sx={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "40px 0",
+          position: {
+            xs: "fixed",
+            md: "relative",
+          },
+
+          width: showSlideBar ? "280px" : 0,
+          backgroundColor: "white",
+          zIndex: (theme: any) => theme.zIndex.drawer + 2,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: showSlideBar ? "280px" : 0,
+            backgroundColor: "white",
+            borderRight: "0.1px solid #e8e8e8",
+            boxShadow: {
+              xs: "rgba(149, 157, 165, 0.5) 0px 8px 24px",
+              md: "none",
+            },
+          },
         }}
       >
-        {ROUTER_LIST.map((item, index) => {
-          return (
-            <Box
-              key={index}
-              component="div"
-              sx={{
-                margin: "4px 0",
-                padding: "15px 50px",
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "rgb(55 102 244 / 10%)",
-                },
-              }}
+        <Box>
+          <Box
+            sx={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              cursor: "pointer",
+              display: {
+                xs: "block",
+                md: "none",
+              },
+            }}
+          >
+            <CloseIcon
+              sx={{ fontSize: "30px", color: "#000" }}
+              onClick={onCloseShowSlide}
+            />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center" }} mt={10}>
+            <Avatar
+              alt="Remy Sharp"
+              src={avatarImage}
+              sx={{ width: 120, height: 120 }}
+            />
+          </Box>
+          <Box>
+            <Typography
+              variant="h6"
+              gutterBottom
+              textAlign="center"
+              fontWeight="600"
+              mb={0}
+              mt={3}
             >
-              <NavLink
-                style={({ isActive }) => {
-                  return {
-                    display: "block",
-                    textDecoration: "none",
-                    color: isActive ? "#3766f4" : "#171717",
-                    fontWeight: "bold",
-                  };
+              Hà Gia Kính
+            </Typography>
+            <Typography
+              variant="body1"
+              gutterBottom
+              textAlign="center"
+              fontSize="14px"
+            >
+              Code để thành công
+            </Typography>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            padding: "40px 0",
+          }}
+        >
+          {ROUTER_LIST.map((item, index) => {
+            return (
+              <Box
+                key={index}
+                component="div"
+                sx={{
+                  margin: "4px 0",
+                  padding: "15px 50px",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "rgb(55 102 244 / 10%)",
+                  },
                 }}
-                to={item.path}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    fontSize: "1.1rem",
-                    alignItems: "center",
+                <NavLink
+                  style={({ isActive }) => {
+                    return {
+                      display: "block",
+                      textDecoration: "none",
+                      color: isActive ? "#3766f4" : "#171717",
+                      fontWeight: "bold",
+                    };
                   }}
+                  to={item.path}
                 >
-                  <item.icon />
-                  <Box component="span" sx={{ ml: 3 }}>
-                    {item.name}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      fontSize: "1.1rem",
+                      alignItems: "center",
+                    }}
+                  >
+                    <item.icon />
+                    <Box component="span" sx={{ ml: 3 }}>
+                      {item.name}
+                    </Box>
                   </Box>
-                </Box>
-              </NavLink>
-            </Box>
-          );
-        })}
-      </Box>
-    </Drawer>
+                </NavLink>
+              </Box>
+            );
+          })}
+        </Box>
+      </Drawer>
+      <Backdrop
+        open={showSlideBar}
+        sx={{
+          color: "#fff",
+          zIndex: (theme: any) => theme.zIndex.drawer + 1,
+          display: { xs: showSlideBar ? "block" : "none", md: "none" },
+        }}
+        onClick={onCloseShowSlide}
+      />
+    </>
   );
 };
 

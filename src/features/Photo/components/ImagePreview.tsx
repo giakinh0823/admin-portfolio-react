@@ -20,13 +20,12 @@ const ImagePreview = ({ image, open, onClose,handleRemove }: IImagePreviewProps)
         open={open}
         onClose={onClose}
         maxWidth="md"
+        scroll="body"
         sx={{
-          height: "fit-content",
-          top: "200px",
         }}
       >
         <DialogTitle id="alert-dialog-title">{"Hình ảnh"}</DialogTitle>
-        <DialogContent sx={{ maxWidth: "1200px" }}>
+        <DialogContent sx={{ maxWidth: "1500px" }}>
           {image && (
             <Box
               sx={{

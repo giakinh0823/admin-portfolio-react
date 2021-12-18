@@ -8,9 +8,9 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
-import { useDeletePhoto } from "../../../hooks/useDeltePhoto";
-import usePhotos from "../../../hooks/usePhotos";
-import { useRemovePhoto } from "../../../hooks/useRemovePhoto";
+import { useDeletePhoto } from "../../../hooks/photo/useDeltePhoto";
+import usePhotos from "../../../hooks/photo/usePhotos";
+import { useRemovePhoto } from "../../../hooks/photo/useRemovePhoto";
 import ImagePreview from "./ImagePreview";
 
 export interface IListPhotoProps {
@@ -107,7 +107,6 @@ const ListPhoto = (
       }
     }
   }, [listCheck, data, handleChangeSelect]);
-
 
   // Truyền function cho father để gọi 2 hàm handleButton, handleRemoveSelectAll
   React.useImperativeHandle(
@@ -244,12 +243,7 @@ const ListPhoto = (
       )}
       {!isLoading && (
         <>
-          <Box
-            sx={{
-              height: "80vh",
-              overflowY: "auto",
-            }}
-          >
+          <Box>
             <form onSubmit={handleSubmit(onSubmit)}>
               {data && (
                 <ImageList
@@ -265,52 +259,50 @@ const ListPhoto = (
                   }}
                 >
                   {data.map((item: any, index: number) => (
-                    <>
-                      <ImageListItem
-                        key={index}
-                        sx={{
-                          borderRadius: "30px",
-                          overflow: "hidden",
-                          position: "relative",
-                          "&:hover": {
-                            cursor: "pointer",
-                            "& img": {
-                              transform: "scale(1.1)",
-                              transition: "all 0.3s ease-in-out",
-                            },
-                            "& svg": {
-                              display: "block",
-                            },
+                    <ImageListItem
+                      key={index}
+                      sx={{
+                        borderRadius: "30px",
+                        overflow: "hidden",
+                        position: "relative",
+                        "&:hover": {
+                          cursor: "pointer",
+                          "& img": {
+                            transform: "scale(1.1)",
+                            transition: "all 0.3s ease-in-out",
                           },
+                          "& svg": {
+                            display: "block",
+                          },
+                        },
+                      }}
+                    >
+                      <img
+                        src={`${item.url}`}
+                        alt={item.title}
+                        loading="lazy"
+                        style={{ height: "300px", objectFit: "cover" }}
+                      />
+                      <CenterFocusStrongIcon
+                        sx={{
+                          display: "none",
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          fontSize: "3rem",
+                          color: "white",
+                          transform: "translate(-50%, -50%)",
+                          transition: "all 0.5s linear",
                         }}
-                      >
-                        <img
-                          src={`${item.url}`}
-                          alt={item.title}
-                          loading="lazy"
-                          style={{ height: "300px", objectFit: "cover" }}
-                        />
-                        <CenterFocusStrongIcon
-                          sx={{
-                            display: "none",
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            fontSize: "3rem",
-                            color: "white",
-                            transform: "translate(-50%, -50%)",
-                            transition: "all 0.5s linear",
-                          }}
-                          onClick={() => onOpen(item)}
-                        />
-                        <InputCheckbox
-                          id={item.id}
-                          selected={selected}
-                          control={control}
-                          setValue={setValue}
-                        />
-                      </ImageListItem>
-                    </>
+                        onClick={() => onOpen(item)}
+                      />
+                      <InputCheckbox
+                        id={item.id}
+                        selected={selected}
+                        control={control}
+                        setValue={setValue}
+                      />
+                    </ImageListItem>
                   ))}
                 </ImageList>
               )}

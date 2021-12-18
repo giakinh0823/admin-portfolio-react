@@ -1,7 +1,7 @@
 
 
 export interface Topic {
-  id: string;
+  id?: string;
   name: string;
   slug: string;
 }

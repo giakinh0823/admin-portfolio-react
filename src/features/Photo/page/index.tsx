@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import * as React from "react";
 import Header from "../components/Header";
 import ListPhoto from "../components/ListPhoto";
@@ -28,6 +28,11 @@ export default function Photo(props: IPhotoProps) {
   return (
     <Box component="div" sx={{ width: "100%" }}>
       <Stack width="100%">
+        <Box>
+          <Typography variant="h4" component="h4" fontWeight="600" mb={3}>
+            Photos
+          </Typography>
+        </Box>
         <Box component="div" sx={{ width: "100%" }}>
           <Header handleRemove={handleRemove} handleChekbox={handleChekbox} selected={selected} handleRemoveSelect={handleRemoveSelect}/>
         </Box>

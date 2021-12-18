@@ -4,7 +4,7 @@ import { Box } from "@mui/system";
 import * as React from "react";
 import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
-import { useUpload } from "../../../hooks/useUpload";
+import { useUpload } from "../../../hooks/photo/useUpload";
 import Upload from "./Upload";
 export interface IHeaderProps {
   handleRemove: () => void;
@@ -35,8 +35,7 @@ const Header = ({
     async (file: File) => {
       toastId.current = toast("🦄 Đang upload hình ảnh", { autoClose: false });
       try {
-        const image = await mutation.mutateAsync({ file: file });
-        console.log(image);
+        await mutation.mutateAsync({ file: file });
         toast.update(toastId.current, {
           render: "🦄 Upload thành công",
           autoClose: 5000,

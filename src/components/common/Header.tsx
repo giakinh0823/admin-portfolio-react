@@ -2,13 +2,25 @@ import { Link as MuiLink, Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import ButtonPrimary from "../button/ButtonPrimary";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+export interface HeaderProps {
+  onChangeShowSlide?: any;
+}
 
-export interface HeaderProps {}
-
-export function Header(props: HeaderProps) {
+export function Header({onChangeShowSlide}: HeaderProps) {
   return (
-    <Box py={2} px={4}>
+    <Box py={3} px={5}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Box>
+          <Stack direction="row" alignItems="center">
+            <Box>
+              <ButtonPrimary onClick={onChangeShowSlide}>
+                <MenuOutlinedIcon/>
+              </ButtonPrimary>
+            </Box>
+          </Stack>
+        </Box>
         <Box>
           <Link to={"/"} style={{ textDecoration: "none" }}>
             <MuiLink component="div">
@@ -23,7 +35,6 @@ export function Header(props: HeaderProps) {
             </MuiLink>
           </Link>
         </Box>
-        <Stack direction="row" alignItems="center"></Stack>
       </Stack>
     </Box>
   );

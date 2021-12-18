@@ -14,7 +14,6 @@ const blogApi = {
   add(data: any): Promise<Photo> {
     const url = "/upload/";
     const form_data = new FormData();
-    console.log(data);
     form_data.append("image", data.file, data.file.name);
     return axiosClient.post(url, form_data, {
       headers: {
