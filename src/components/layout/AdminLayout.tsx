@@ -10,6 +10,7 @@ import { NotFound } from "../common/NotFound";
 import Sidebar from "../common/SlideBar";
 import EditTopic from "../../features/Topic/pages/EditTopic";
 import CreateTopic from "../../features/Topic/pages/CreateTopic";
+import CreateBlog from "../../features/Blog/pages/createBlog";
 
 export function AdminLayout() {
   const [showSlideBar, setShowSlideBar] = React.useState(true);
@@ -28,6 +29,7 @@ export function AdminLayout() {
             <Routes>
               <Route path="/" element={<DashBoard />} />
               <Route path="/blogs" element={<Blog />} />
+              <Route path="/blogs/create" element={<CreateBlog />} />
               <Route path="/topics" element={<Topic />} />
               <Route path="/topics/create" element={<CreateTopic />} />
               <Route path="/topics/:slug" element={<EditTopic />} />

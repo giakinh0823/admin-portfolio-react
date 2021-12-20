@@ -80,6 +80,9 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
               fontWeight="600"
               mb={0}
               mt={3}
+              sx={{
+                color: "#333",
+              }}
             >
               Hà Gia Kính
             </Typography>
@@ -88,6 +91,9 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
               gutterBottom
               textAlign="center"
               fontSize="14px"
+              sx={{
+                color: "#333",
+              }}
             >
               Code để thành công
             </Typography>
@@ -99,7 +105,7 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            padding: "40px 0",
+            padding: "40px 20px",
           }}
         >
           {ROUTER_LIST.map((item, index) => {
@@ -109,11 +115,7 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
                 component="div"
                 sx={{
                   margin: "4px 0",
-                  padding: "15px 50px",
                   transition: "all 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "rgb(55 102 244 / 10%)",
-                  },
                 }}
               >
                 <NavLink
@@ -121,8 +123,14 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
                     return {
                       display: "block",
                       textDecoration: "none",
-                      color: isActive ? "#3766f4" : "#171717",
+                      color: isActive ? "#3766f4" : "#333",
                       fontWeight: "bold",
+                      backgroundColor: isActive ? "rgb(55 102 244 / 10%)": undefined,
+                      padding: "15px 50px",
+                      borderRadius: "15px",
+                      "&:hover": {
+                        backgroundColor: "rgb(55 102 244 / 10%)",
+                      },
                     };
                   }}
                   to={item.path}

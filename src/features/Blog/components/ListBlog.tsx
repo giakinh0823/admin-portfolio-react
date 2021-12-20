@@ -224,7 +224,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         </Tooltip>
       ) : (
         <Tooltip title="Create Topic">
-          <Link to={`/topics/create`}>
+          <Link to={`/blogs/create`}>
             <IconButton>
               <AddIcon />
             </IconButton>
@@ -235,7 +235,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   );
 };
 
-export default function ListTopic() {
+export default function ListBlog() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly string[]>([]);

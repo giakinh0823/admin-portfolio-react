@@ -16,6 +16,7 @@ import ImagePreview from "./ImagePreview";
 export interface IListPhotoProps {
   selected: boolean;
   handleChangeSelect: (selected: boolean) => void;
+  handleChangeImage: any;
 }
 
 const InputCheckbox = React.memo(
@@ -69,8 +70,8 @@ const InputCheckbox = React.memo(
   }
 );
 
-const ListPhoto = (
-  { selected, handleChangeSelect }: IListPhotoProps,
+const ListImageBlog = (
+  { selected, handleChangeSelect, handleChangeImage }: IListPhotoProps,
   ref: any
 ) => {
   const { data, isLoading } = usePhotos({ ordering: "-id" });
@@ -122,8 +123,25 @@ const ListPhoto = (
           });
         }
       },
+      hanldeChooseImage: () => {
+        if (listCheck) {
+          const list: any[] = [];
+          listCheck.forEach((item: any, index: number) => {
+            if(item){
+                list.push(index);
+            }
+          });
+          if(list){
+              if(list.length>1){
+                  toast.error("Chỉ được chọn 1 ảnh");
+              }else{
+                handleChangeImage(list[0]);
+              }
+          }
+        }
+      },
     }),
-    [data, setValue]
+    [data, setValue, listCheck, handleChangeImage]
   );
 
   // Mở dialog review hình ảnh
@@ -232,7 +250,6 @@ const ListPhoto = (
         <Box
           sx={{
             width: "100%",
-            minHeight: "50vh",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -243,7 +260,7 @@ const ListPhoto = (
       )}
       {!isLoading && (
         <>
-          <Box>
+          <Box sx={{ height: "60vh", overflowY: "auto" }}>
             <form onSubmit={handleSubmit(onSubmit)}>
               {data && (
                 <ImageList
@@ -339,4 +356,4 @@ const ListPhoto = (
   );
 };
 
-export default React.forwardRef(ListPhoto);
+export default React.forwardRef(ListImageBlog);
