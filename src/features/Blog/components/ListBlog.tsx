@@ -528,12 +528,6 @@ export default function ListBlog() {
                         >
                           Preview
                         </ButtonPrimary>
-                        <PreviewContent
-                          open={openPreviewContent}
-                          onClose={() => setOpenPreviewContent(false)}
-                          title={previewContent.title}
-                          content={previewContent.content}
-                        />
                       </TableCell>
                     </TableRow>
                   );
@@ -566,6 +560,12 @@ export default function ListBlog() {
         title={"Xóa blog"}
         handleConfirm={handleConfirmDelete}
         handleClose={() => setOpenConfirmDelete(false)}
+      />
+      <PreviewContent
+        open={openPreviewContent}
+        onClose={() => setOpenPreviewContent(false)}
+        title={previewContent.title}
+        content={previewContent.content}
       />
     </Box>
   );
