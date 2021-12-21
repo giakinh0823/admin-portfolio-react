@@ -4,7 +4,7 @@ import { queryClient } from '../../lib/query/queryClient';
 
 export function useUpdateBlog() {
   return useMutation(async (data: any) => await blogApi.update(data), {
-    onSettled: () => {
+    onSettled: (data: any) => {
       queryClient.invalidateQueries("blogs");
     }
   });

@@ -13,6 +13,7 @@ export default function AuthPage(props: IAppProps) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#e3f2f6",
       }}
     >
       <FormLogin />

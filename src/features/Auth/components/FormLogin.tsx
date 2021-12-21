@@ -60,10 +60,12 @@ export default function FormLogin(props: IFormLoginProps) {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        backgroundColor: "#fff",
       }}
     >
       <Box mb={8}>
-        <Typography variant="h3">Hà Gia Kính</Typography>
+        <Typography variant="h3" textAlign="center" mb={2}>Hà Gia Kính</Typography>
+        <Typography variant="body1" textAlign="center">Đăng nhập</Typography>
       </Box>
       <form
         onSubmit={handleSubmit(onSubmit)}

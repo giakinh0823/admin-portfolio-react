@@ -70,8 +70,8 @@ export default function EditBlog(props: ICreateBlogProps) {
       const newData = {
         ...datas,
         content: content ? content : "",
-        tags: datas?.tags?.map((item: any) => item.value),
-        topics: datas?.topics?.map((item: any) => item.value),
+        tags: datas?.tags?.map((item: any) => item.value || item.id ),
+        topics: datas?.topics?.map((item: any) => item.value || item.id),
         image: imageId ? imageId : undefined,
         author: 1,
         id: data?.id,
