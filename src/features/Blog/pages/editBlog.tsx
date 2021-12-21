@@ -9,15 +9,17 @@ import { useForm } from "react-hook-form";
 import ReactMarkdown from "react-markdown";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-toastify";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
+import CrcularProgress from "../../../components/progress/CrcularProgress";
 import SelectMultiChip from "../../../components/select/SelectMultiChip";
-import { useCreateBlog } from "../../../hooks/blog/useCrateBlog";
+import useBlog from "../../../hooks/blog/useBlog";
+import { useUpdateBlog } from "../../../hooks/blog/useUpdateBlog";
 import usePhotos from "../../../hooks/photo/usePhotos";
 import useTags from "../../../hooks/tag/useTags";
 import useTopics from "../../../hooks/topic/useTopics";
@@ -26,8 +28,20 @@ import ShowListImage from "../components/ShowListImage";
 
 export interface ICreateBlogProps {}
 
-export default function CreateBlog(props: ICreateBlogProps) {
-  const form = useForm();
+export default function EditBlog(props: ICreateBlogProps) {
+  const { slug } = useParams();
+  const { data, isLoading } = useBlog(slug);
+  const form = useForm({
+    defaultValues: {
+      title: data?.title,
+      description: data?.description,
+      content: data?.content,
+      tags: data?.tags,
+      topics: data?.topics,
+      image: data?.image,
+      author: data?.author,
+    },
+  });
   const { register, handleSubmit } = form;
   const photos = usePhotos({ ordering: "-id" });
   const tags = useTags({});
@@ -37,27 +51,36 @@ export default function CreateBlog(props: ICreateBlogProps) {
   const [imagePreviw, setImagePreview] = React.useState<any>();
   const [content, setContent] = React.useState<any>();
   const toastId = React.useRef<any>(null);
-  const mutation = useCreateBlog();
-  const [openPreviewContent, setOpenPreviewContent] = React.useState<boolean>(false);
+  const mutation = useUpdateBlog();
+  const [openPreviewContent, setOpenPreviewContent] =
+    React.useState<boolean>(false);
 
   let navigate = useNavigate();
 
-  const onSubmit = (data: any) => {
+  React.useEffect(() => {
     if (data) {
+      setImageId(data?.image?.id);
+      setContent(data?.content);
+    }
+  }, [data]);
+
+  const onSubmit = (datas: any) => {
+    if (datas) {
       const newData = {
-        ...data,
+        ...datas,
         content: content ? content : "",
-        tags: data?.tags?.map((item: any) => item.value),
-        topics: data?.topics?.map((item: any) => item.value),
+        tags: datas?.tags?.map((item: any) => item.value),
+        topics: datas?.topics?.map((item: any) => item.value),
         image: imageId ? imageId : undefined,
         author: 1,
+        id: data?.id,
       };
       (async () => {
-        toastId.current = toast("🦄 Đang tạo blog", { autoClose: false });
+        toastId.current = toast("🦄 Đang cập nhật blog", { autoClose: false });
         try {
           await mutation.mutateAsync(newData);
           toast.update(toastId.current, {
-            render: "🦄 Tạo blog thành công",
+            render: "🦄 Cập nhật blog thành công",
             autoClose: 5000,
             type: toast.TYPE.SUCCESS,
           });
@@ -67,7 +90,7 @@ export default function CreateBlog(props: ICreateBlogProps) {
           navigate("/blogs");
         } catch (e) {
           toast.update(toastId.current, {
-            render: "🦄Tạo blog thất bại",
+            render: "🦄 Cập nhật blog thất bại",
             autoClose: 5000,
             type: toast.TYPE.ERROR,
           });
@@ -93,6 +116,22 @@ export default function CreateBlog(props: ICreateBlogProps) {
     setContent(text);
   }
 
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: "50vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CrcularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box component="div" sx={{ width: "100%" }}>
       <Box
@@ -110,6 +149,7 @@ export default function CreateBlog(props: ICreateBlogProps) {
               label="Title"
               variant="standard"
               fullWidth
+              defaultValue={data?.title}
               {...register("title", { required: true })}
             />
           </Box>
@@ -120,16 +160,21 @@ export default function CreateBlog(props: ICreateBlogProps) {
               fullWidth
               multiline
               rows={3}
+              defaultValue={data?.description}
               {...register("description", { required: true })}
             />
           </Box>
           <Box
             mb={3}
-            sx={{ "& code": { backgroundColor: "transparent"},  maxWidth: "100%"  }}
+            sx={{
+              "& code": { backgroundColor: "transparent" },
+              maxWidth: "100%",
+            }}
             className="content-markdown"
           >
             <MdEditor
-              style={{ height: "600px", zIndex: 2, maxWidth: "100%"}}
+              style={{ height: "600px", zIndex: 2, maxWidth: "100%" }}
+              value={content}
               renderHTML={(text) => (
                 <ReactMarkdown
                   rehypePlugins={[rehypeRaw]}
@@ -180,6 +225,10 @@ export default function CreateBlog(props: ICreateBlogProps) {
               <SelectMultiChip
                 name="topics"
                 label="Topics"
+                defaultValue={data?.topics.map((topic: any) => ({
+                  label: topic?.name,
+                  value: topic?.id,
+                }))}
                 required={true}
                 options={
                   topics?.data
@@ -193,6 +242,10 @@ export default function CreateBlog(props: ICreateBlogProps) {
               />
               <SelectMultiChip
                 required={true}
+                defaultValue={data?.tags.map((tag: any) => ({
+                  label: tag?.name,
+                  value: tag?.id,
+                }))}
                 name="tags"
                 label="Tags"
                 options={
@@ -242,10 +295,12 @@ export default function CreateBlog(props: ICreateBlogProps) {
           </Box>
           <Stack direction="row" spacing={2} mt={3} justifyContent="flex-end">
             <Box sx={{}}>
-              <ButtonPrimary onClick={() => setOpenPreviewContent(true)}>Preview</ButtonPrimary>
+              <ButtonPrimary onClick={() => setOpenPreviewContent(true)}>
+                Preview
+              </ButtonPrimary>
             </Box>
             <Box sx={{}}>
-              <ButtonPrimary type="submit">Tạo Blog</ButtonPrimary>
+              <ButtonPrimary type="submit">Cập nhật</ButtonPrimary>
             </Box>
           </Stack>
         </form>

@@ -1,0 +1,64 @@
+/* .ce-code__textarea {
+    font-size: 16px !important;
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Source+Code+Pro:wght@200;300;400;500;600;700;800;900&display=swap');
+
+
+.content-markdown p {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-markdown img {
+    width: 60%;
+    height: 60%;
+    margin: 0 auto;
+}
+
+.content-markdown p {
+    font-size: 18px;
+}
+
+.content-markdown ul li {
+    font-size: 18px;
+}
+
+.content-markdown h1 {
+    font-size: 40px;
+}
+
+.content-markdown h2 {
+    font-size: 36px;
+}
+
+.content-markdown h3 {
+    font-size: 34px;
+}
+
+.content-markdown pre {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: transparent!important;
+}
+
+.content-markdown pre code span span {
+    font-family: Source Code Pro, Menlo, Monaco, Consolas, Courier New, monospace;
+    font-size: 18px;
+}
+
+.content-markdown pre code span {
+    font-family: Source Code Pro, Menlo, Monaco, Consolas, Courier New, monospace;
+    font-size: 18px;
+}
+
+.content-markdown pre code {
+    font-family: Source Code Pro, Menlo, Monaco, Consolas, Courier New, monospace;
+    font-size: 18px;
+}
+
+.content-markdown pre code .linenumber {
+    color: #707a84 !important;
+}
+

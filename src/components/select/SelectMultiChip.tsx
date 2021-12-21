@@ -40,6 +40,7 @@ interface SelectChip {
   form: any;
   name: string;
   required?: boolean;
+  defaultValue?: any[];
 }
 
 export default function SelectMultiChip({
@@ -48,6 +49,7 @@ export default function SelectMultiChip({
   form,
   name,
   required,
+  defaultValue,
 }: SelectChip) {
   const { control } = form;
   const theme = useTheme();
@@ -60,11 +62,19 @@ export default function SelectMultiChip({
     setData(typeof value === "string" ? value.split(",") : value);
   };
 
+  React.useEffect(() => {
+    if(defaultValue){
+      const data = options.filter(option => defaultValue.find(value => value.value === option.value));
+      setData(data); 
+    }
+  },[defaultValue, options]);
+  
   return (
     <div>
       <Controller
         control={control}
         name={name}
+        defaultValue={defaultValue ? defaultValue : []}
         rules={{ required: required ? required : false }}
         render={({
           field: { onChange, onBlur, value, name, ref },
@@ -88,9 +98,9 @@ export default function SelectMultiChip({
               input={<OutlinedInput id="multiple-chip" label="Chip" />}
               renderValue={(selected) => (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => (
+                  {selected.map((value, index) => (
                     <Chip
-                      key={value.value}
+                      key={index}
                       label={value.label}
                       color="primary"
                     />

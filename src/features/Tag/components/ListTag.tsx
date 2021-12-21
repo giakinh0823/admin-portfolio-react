@@ -23,52 +23,18 @@ import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
-import useBlogs from "../../../hooks/blog/useBlogs";
-import { useRemoveBlog } from "../../../hooks/blog/useRemoveBlog";
-import PreviewContent from "./PreviewContent";
+import { useRemoveTag } from "../../../hooks/tag/useRemoveTag";
+import useTags from "../../../hooks/tag/useTags";
 
 interface Data {
   id: string;
-  title: string;
-  description: string;
-  author: any;
-  image: string;
-  topics: any[];
-  content: string;
-  tags: any[];
-  slug: string;
-  created_at: string;
-  updated_at: string;
-  is_public: any;
+  name: string;
 }
 
-function createData(
-  id: string,
-  title: string,
-  description: string,
-  author: any,
-  image: string,
-  topics: any[],
-  content: string,
-  tags: any[],
-  slug: string,
-  created_at: string,
-  updated_at: string,
-  is_public: any
-): Data {
+function createData(id: string, name: string): Data {
   return {
     id,
-    title,
-    description,
-    author,
-    image,
-    topics,
-    content,
-    tags,
-    slug,
-    created_at,
-    updated_at,
-    is_public,
+    name,
   };
 }
 
@@ -99,7 +65,7 @@ function getComparator<Key extends keyof any>(
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
 function stableSort<T>(
-  array: readonly any[],
+  array: readonly T[],
   comparator: (a: T, b: T) => number
 ) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
@@ -128,40 +94,16 @@ const headCells: readonly HeadCell[] = [
     label: "Id",
   },
   {
-    id: "title",
+    id: "name",
     numeric: true,
     disablePadding: false,
-    label: "Title",
+    label: "Name",
   },
   {
-    id: "author",
-    numeric: true,
-    disablePadding: false,
-    label: "Author",
-  },
-  {
-    id: "topics",
-    numeric: true,
-    disablePadding: false,
-    label: "Topics",
-  },
-  {
-    id: "tags",
-    numeric: true,
-    disablePadding: false,
-    label: "Tags",
-  },
-  {
-    id: "slug",
+    id: "id",
     numeric: true,
     disablePadding: false,
     label: "Action",
-  },
-  {
-    id: "content",
-    numeric: true,
-    disablePadding: false,
-    label: "Preview",
   },
 ];
 
@@ -280,7 +222,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         </Tooltip>
       ) : (
         <Tooltip title="Create Topic">
-          <Link to={`/blogs/create`}>
+          <Link to={`/tags/create`}>
             <IconButton>
               <AddIcon />
             </IconButton>
@@ -291,37 +233,21 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   );
 };
 
-export default function ListBlog() {
+export default function ListTag() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const { data, isLoading } = useBlogs({});
+  const { data, isLoading } = useTags({});
   const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
-  const mutation = useRemoveBlog();
+  const mutation = useRemoveTag();
   const toastId = React.useRef<any>(null);
-  const [previewContent, setPreviewContent] = React.useState<any>({});
-  const [openPreviewContent, setOpenPreviewContent] =
-    React.useState<boolean>(false);
 
   const rows = React.useMemo(() => {
-    if (data?.results) {
-      const rows = data?.results?.map((blog: any) => {
-        return createData(
-          blog?.id,
-          blog?.title,
-          blog?.description,
-          blog?.author,
-          blog?.image,
-          blog?.topics,
-          blog?.content,
-          blog?.tags,
-          blog?.slug,
-          blog?.created_at,
-          blog?.updated_at,
-          blog?.is_public
-        );
+    if (data) {
+      const rows = data.map((tag: any) => {
+        return createData(tag.id, tag.name);
       });
       return rows;
     }
@@ -346,7 +272,7 @@ export default function ListBlog() {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: any) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly string[] = [];
 
@@ -377,20 +303,20 @@ export default function ListBlog() {
     setPage(0);
   };
 
-  const isSelected = (id: any) => selected.indexOf(id) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
-  // xử lý xóa topics
+  // xử lý xóa tag
   const handleDelete = () => {
     setOpenConfirmDelete(true);
   };
 
   const handleConfirmDelete = () => {
     (async () => {
-      toastId.current = toast("🦄 Đang xóa blog", { autoClose: false });
+      toastId.current = toast("🦄 Đang xóa tag", { autoClose: false });
       try {
         await mutation.mutateAsync(selected);
         toast.update(toastId.current, {
-          render: "🦄 Xóa blog thành công",
+          render: "🦄 Xóa tag thành công",
           autoClose: 5000,
           type: toast.TYPE.SUCCESS,
         });
@@ -398,7 +324,7 @@ export default function ListBlog() {
         setSelected([]);
       } catch (e: any) {
         toast.update(toastId.current, {
-          render: "🦄 Xóa blog thất bại",
+          render: "🦄 Xóa tag thất bại",
           autoClose: 5000,
           type: toast.TYPE.ERROR,
         });
@@ -460,11 +386,10 @@ export default function ListBlog() {
               rows.slice().sort(getComparator(order, orderBy)) */}
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row: any, index) => {
+                .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  const topics = row?.topics;
-                  const tags = row?.tags;
+
                   return (
                     <TableRow
                       hover
@@ -493,47 +418,14 @@ export default function ListBlog() {
                       >
                         {row.id}
                       </TableCell>
-                      <TableCell align="center">{row.title}</TableCell>
-                      <TableCell align="center">
-                        {row.author.username}
-                      </TableCell>
-                      <TableCell align="center">
-                        {topics
-                          ? topics?.map((topic: any) => topic.name).join(", ")
-                          : ""}
-                      </TableCell>
-                      <TableCell align="center">
-                        {tags
-                          ? tags?.map((tag: any) => tag.name).join(", ")
-                          : ""}
-                      </TableCell>
-                      {/* <TableCell align="center">{row.title}</TableCell> */}
+                      <TableCell align="center">{row.name}</TableCell>
                       <TableCell align="center">
                         <Link
-                          to={`/blogs/${row.slug}`}
+                          to={`/tags/${row.id}`}
                           style={{ textDecoration: "none" }}
                         >
                           <ButtonPrimary>Chỉnh sửa</ButtonPrimary>
                         </Link>
-                      </TableCell>
-                      <TableCell align="center">
-                        <ButtonPrimary
-                          onClick={() => {
-                            setPreviewContent({
-                              title: row.title,
-                              content: row.content,
-                            });
-                            setOpenPreviewContent(true);
-                          }}
-                        >
-                          Preview
-                        </ButtonPrimary>
-                        <PreviewContent
-                          open={openPreviewContent}
-                          onClose={() => setOpenPreviewContent(false)}
-                          title={previewContent.title}
-                          content={previewContent.content}
-                        />
                       </TableCell>
                     </TableRow>
                   );
@@ -561,9 +453,9 @@ export default function ListBlog() {
         />
       </Paper>
       <DialogConfirm
-        message={"Bạn có chắc chắn muốn blog này?"}
+        message={"Bạn có chắc chắn muốn tag này?"}
         open={openConfirmDelete}
-        title={"Xóa blog"}
+        title={"Xóa tag"}
         handleConfirm={handleConfirmDelete}
         handleClose={() => setOpenConfirmDelete(false)}
       />

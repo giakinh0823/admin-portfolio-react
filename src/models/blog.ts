@@ -6,7 +6,7 @@ export interface Blog{
     title: string;
     description: string;
     author: any;
-    image: string;
+    image: any;
     topics: any;
     content: string;
     tags: any;

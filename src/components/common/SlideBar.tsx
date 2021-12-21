@@ -33,7 +33,10 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
 
           width: showSlideBar ? "280px" : 0,
           backgroundColor: "white",
-          zIndex: (theme: any) => theme.zIndex.drawer + 2,
+          zIndex: (theme: any) => ({
+            xs: theme.zIndex.drawer + 2,
+            md: 1,
+          }),
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",

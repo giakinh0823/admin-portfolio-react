@@ -1,10 +1,13 @@
-import BookIcon from "@mui/icons-material/Book";
+import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import FlutterDashIcon from "@mui/icons-material/FlutterDash";
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import TopicIcon from "@mui/icons-material/Topic";
+import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
+
 import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActualOutlined';
+import TagIcon from '@mui/icons-material/Tag';
+
 
 export const ROUTER_LIST = [
   {
@@ -15,12 +18,17 @@ export const ROUTER_LIST = [
   {
     path: "/blogs",
     name: "Blogs",
-    icon: BookIcon,
+    icon: BookOutlinedIcon,
   },
   {
     path: "/topics",
     name: "Topics",
-    icon: TopicIcon,
+    icon: TopicOutlinedIcon,
+  },
+  {
+    path: "/tags",
+    name: "Tags",
+    icon: TagIcon,
   },
   {
     path: "/photos",
