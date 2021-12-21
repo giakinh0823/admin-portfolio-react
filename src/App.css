@@ -41,6 +41,11 @@
     padding: 20px;
     border-radius: 10px;
     background-color: transparent!important;
+    max-width: 100%;
+}
+
+.markdown-edit pre {
+    max-width: 1200px;
 }
 
 .content-markdown pre code span span {
@@ -62,3 +67,7 @@
     color: #707a84 !important;
 }
 
+
+.markdown-edit .rc-md-editor.full{
+    z-index: 1300;
+}

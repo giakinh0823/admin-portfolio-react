@@ -41,7 +41,7 @@ const Upload = ({ open, onClose, onUpload }: IAppProps) => {
         onUpload && onUpload(file);
         setFile(null);
     }else{
-        toast.error('🦄 Chưa chọn hình ảnh');
+        toast.error('🦄 Chưa chọn hình ảnh', {autoClose: 5000});
     }
   }
 

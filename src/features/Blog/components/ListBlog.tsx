@@ -269,7 +269,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           id="tableTitle"
           component="div"
         >
-          Topics
+          Blogs
         </Typography>
       )}
       {numSelected > 0 ? (

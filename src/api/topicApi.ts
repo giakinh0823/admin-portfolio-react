@@ -5,31 +5,67 @@ import axiosClient from "./axiosClient";
 const blogApi = {
   getAll(params: ListParams): Promise<Topic[]> {
     const url = "/topics/";
-    return axiosClient.get(url, { params });
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.get(url, {
+      params,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   getById(id: string): Promise<Topic> {
     const url = `/topics/${id}/`;
-    return axiosClient.get(url);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.get(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   getBySlug(slug: string): Promise<Topic> {
     const url = `/topic/${slug}/`;
-    return axiosClient.get(url);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.get(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   add(data: Topic): Promise<Topic> {
     const url = "/topics/";
-    return axiosClient.post(url, data);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   remove(id: string): Promise<Topic> {
     const url = `/topics/remove/${id}/`;
-    return axiosClient.delete(url);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.delete(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   removeAll(data: any): Promise<Topic> {
     const url = `/topics/remove/`;
-    return axiosClient.post(url, data);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   update(data: Partial<Topic>): Promise<Topic> {
     const url = `/topics/${data.id}/`;
-    return axiosClient.patch(url, data);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
 };
 

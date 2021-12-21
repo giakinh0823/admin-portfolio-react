@@ -5,27 +5,58 @@ import axiosClient from "./axiosClient";
 const tagApi = {
   getAll(params: ListParams): Promise<Tag[]> {
     const url = "/tags/";
-    return axiosClient.get(url, { params });
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.get(url, {
+      params,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   getById(id: string): Promise<Tag> {
     const url = `/tags/${id}/`;
-    return axiosClient.get(url);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.get(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   add(data: Tag): Promise<Tag> {
     const url = "/tags/";
-    return axiosClient.post(url, data);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   remove(id: string): Promise<Tag> {
     const url = `/tags/${id}/`;
-    return axiosClient.delete(url);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.delete(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   removeAll(data: any): Promise<Tag> {
     const url = `/tags/remove/`;
-    return axiosClient.post(url, data);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
   update(data: Partial<Tag>): Promise<Tag> {
     const url = `/tags/${data.id}/`;
-    return axiosClient.patch(url, data);
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
   },
 };
 

@@ -6,14 +6,13 @@ import { QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 import { store } from "./app/store";
 import "./index.css";
-import { queryClient } from './lib/query/queryClient';
+import { queryClient } from "./lib/query/queryClient";
 import reportWebVitals from "./reportWebVitals";
 import { theme } from "./utils/theme";
-import 'react-toastify/dist/ReactToastify.css';
-
 
 ReactDOM.render(
   <React.StrictMode>

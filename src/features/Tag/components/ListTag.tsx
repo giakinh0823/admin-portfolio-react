@@ -81,7 +81,7 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: any;
   label: string;
   numeric: boolean;
 }
@@ -100,7 +100,7 @@ const headCells: readonly HeadCell[] = [
     label: "Name",
   },
   {
-    id: "id",
+    id: "",
     numeric: true,
     disablePadding: false,
     label: "Action",
@@ -211,7 +211,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           id="tableTitle"
           component="div"
         >
-          Topics
+          Tags
         </Typography>
       )}
       {numSelected > 0 ? (

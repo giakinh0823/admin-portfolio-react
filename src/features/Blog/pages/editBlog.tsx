@@ -4,6 +4,7 @@ import { Stack } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
+import clsx from "clsx";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import ReactMarkdown from "react-markdown";
@@ -168,12 +169,11 @@ export default function EditBlog(props: ICreateBlogProps) {
             mb={3}
             sx={{
               "& code": { backgroundColor: "transparent" },
-              maxWidth: "100%",
             }}
-            className="content-markdown"
+            className={clsx("content-markdown", "markdown-edit")}
           >
             <MdEditor
-              style={{ height: "600px", zIndex: 2, maxWidth: "100%" }}
+              style={{ height: "600px" }}
               value={content}
               renderHTML={(text) => (
                 <ReactMarkdown
