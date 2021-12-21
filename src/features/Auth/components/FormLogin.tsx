@@ -63,7 +63,7 @@ export default function FormLogin(props: IFormLoginProps) {
       }}
     >
       <Box mb={8}>
-        <Typography variant="h3">Admin</Typography>
+        <Typography variant="h3">Hà Gia Kính</Typography>
       </Box>
       <form
         onSubmit={handleSubmit(onSubmit)}
