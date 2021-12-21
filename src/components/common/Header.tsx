@@ -1,14 +1,20 @@
+import FaceOutlinedIcon from "@mui/icons-material/FaceOutlined";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { Link as MuiLink, Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hook';
+import { authActions } from '../../features/Auth/authSlice';
 import ButtonPrimary from "../button/ButtonPrimary";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+
 export interface HeaderProps {
   onChangeShowSlide?: any;
 }
 
-export function Header({onChangeShowSlide}: HeaderProps) {
+export function Header({ onChangeShowSlide }: HeaderProps) {
+  const dispatch = useAppDispatch();
+
   return (
     <Box py={3} px={5}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -16,12 +22,12 @@ export function Header({onChangeShowSlide}: HeaderProps) {
           <Stack direction="row" alignItems="center">
             <Box>
               <ButtonPrimary onClick={onChangeShowSlide}>
-                <MenuOutlinedIcon/>
+                <MenuOutlinedIcon />
               </ButtonPrimary>
             </Box>
           </Stack>
         </Box>
-        <Box>
+        <Stack direction="row" alignItems="center">
           <Link to={"/"} style={{ textDecoration: "none" }}>
             <MuiLink component="div">
               <Stack direction="row" alignItems="center">
@@ -34,7 +40,28 @@ export function Header({onChangeShowSlide}: HeaderProps) {
               </Stack>
             </MuiLink>
           </Link>
-        </Box>
+          <Box
+            onClick={() => {
+              dispatch(authActions.logout());
+            }}
+            ml={4}
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                color: "#3766f4",
+              },
+            }}
+          >
+            <Stack direction="row" alignItems="center">
+              <Box component="span" sx={{ fontSize: "1rem" }}>
+                <FaceOutlinedIcon />
+              </Box>
+              <Box sx={{ ml: 1, fontWeight: "bold", fontSize: "1.2rem" }}>
+                out.
+              </Box>
+            </Stack>
+          </Box>
+        </Stack>
       </Stack>
     </Box>
   );

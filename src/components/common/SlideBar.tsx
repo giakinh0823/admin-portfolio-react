@@ -8,7 +8,6 @@ import avatarImage from "../../assets/images/avatar.jpg";
 import { ROUTER_LIST } from "./ROUTER_LIST";
 import CloseIcon from "@mui/icons-material/Close";
 import Backdrop from "@mui/material/Backdrop";
-
 export interface SidebarProps {
   showSlideBar: boolean;
   onCloseShowSlide?: any;
@@ -125,7 +124,9 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
                       textDecoration: "none",
                       color: isActive ? "#3766f4" : "#333",
                       fontWeight: "bold",
-                      backgroundColor: isActive ? "rgb(55 102 244 / 10%)": undefined,
+                      backgroundColor: isActive
+                        ? "rgb(55 102 244 / 10%)"
+                        : undefined,
                       padding: "15px 50px",
                       borderRadius: "15px",
                       "&:hover": {
