@@ -71,3 +71,26 @@
 .markdown-edit .rc-md-editor.full{
     z-index: 1300;
 }
+
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+    width: 6px;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    /* should match background, can't be transparent */
+    background-color: rgb(189, 189, 189);
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 8px;
+}

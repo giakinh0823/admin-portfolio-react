@@ -17,13 +17,13 @@ export default function DashBoard(props: IDashBoardProps) {
       }}
     >
       <Box>
-        <Box mb={10}>
-          <Typography variant="h1" component="h1" textAlign="center">Dashboard</Typography>
+        <Box mb={6}>
+          <Typography variant="h3" component="h1" textAlign="center">Dashboard</Typography>
         </Box>
         <Box
           sx={{
-            maxHeight: "900px",
-            maxWidth: "900px",
+            maxHeight: "400px",
+            maxWidth: "400px",
             borderRadius: "50px",
             overflow: "hidden",
           }}
