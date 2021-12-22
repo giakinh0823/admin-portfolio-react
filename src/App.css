@@ -94,3 +94,7 @@
 ::-webkit-scrollbar-track {
     border-radius: 8px;
 }
+
+.editor-container .sec-md{
+    border-right: 1px solid #e6e6e6;
+}
