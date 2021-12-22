@@ -1,6 +1,6 @@
-import AddIcon from "@mui/icons-material/Add";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -24,27 +24,53 @@ import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
-import { useRemoveTopic } from "../../../hooks/topic/useRemoveTopic";
-import useTopics from "../../../hooks/topic/useTopics";
+import { useRemoveForeverBlog } from "../../../hooks/blog/useRemoveForeverBlog";
+import { useRestoreBlog } from "../../../hooks/blog/useRestoreBlog";
+import useTrashBlogs from "../../../hooks/blog/useTrashBlogs";
+import PreviewContent from "./PreviewContent";
 
 interface Data {
   id: string;
-  name: string;
-  is_public: boolean;
+  title: string;
+  description: string;
+  author: any;
+  image: string;
+  topics: any[];
+  content: string;
+  tags: any[];
   slug: string;
+  created_at: string;
+  updated_at: string;
+  is_public: any;
 }
 
 function createData(
   id: string,
-  name: string,
-  is_public: boolean,
-  slug: string
+  title: string,
+  description: string,
+  author: any,
+  image: string,
+  topics: any[],
+  content: string,
+  tags: any[],
+  slug: string,
+  created_at: string,
+  updated_at: string,
+  is_public: any
 ): Data {
   return {
     id,
-    name,
-    is_public,
+    title,
+    description,
+    author,
+    image,
+    topics,
+    content,
+    tags,
     slug,
+    created_at,
+    updated_at,
+    is_public,
   };
 }
 
@@ -74,7 +100,10 @@ function getComparator<Key extends keyof any>(
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(array: any[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(
+  array: readonly any[],
+  comparator: (a: T, b: T) => number
+) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -101,10 +130,28 @@ const headCells: readonly HeadCell[] = [
     label: "Id",
   },
   {
-    id: "name",
+    id: "title",
     numeric: true,
     disablePadding: false,
-    label: "Name",
+    label: "Title",
+  },
+  {
+    id: "author",
+    numeric: true,
+    disablePadding: false,
+    label: "Author",
+  },
+  {
+    id: "topics",
+    numeric: true,
+    disablePadding: false,
+    label: "Topics",
+  },
+  {
+    id: "tags",
+    numeric: true,
+    disablePadding: false,
+    label: "Tags",
   },
   {
     id: "is_public",
@@ -113,10 +160,28 @@ const headCells: readonly HeadCell[] = [
     label: "Public",
   },
   {
+    id: "created_at",
+    numeric: true,
+    disablePadding: false,
+    label: "Created",
+  },
+  {
+    id: "updated_at",
+    numeric: true,
+    disablePadding: false,
+    label: "Updated",
+  },
+  {
     id: "slug",
     numeric: true,
     disablePadding: false,
     label: "Action",
+  },
+  {
+    id: "content",
+    numeric: true,
+    disablePadding: false,
+    label: "Preview",
   },
 ];
 
@@ -189,6 +254,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 interface EnhancedTableToolbarProps {
   numSelected: number;
   handleDelete?: any;
+  handleRestore?: any;
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
@@ -224,52 +290,67 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           id="tableTitle"
           component="div"
         >
-          Topics
+          Blogs
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={() => props.handleDelete()}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
         <>
-          <Tooltip title="Create Topic">
-            <Link to={`/topics/create`}>
-              <IconButton>
-                <AddIcon />
-              </IconButton>
-            </Link>
+          <Tooltip title="Delete">
+            <IconButton onClick={() => props.handleRestore()}>
+              <RefreshOutlinedIcon />
+            </IconButton>
           </Tooltip>
-          <Tooltip title="Thùng rác">
-            <Link to={`/topics/trash`}>
-              <IconButton>
-                <DeleteSweepOutlinedIcon />
-              </IconButton>
-            </Link>
+          <Tooltip title="Delete">
+            <IconButton onClick={() => props.handleDelete()}>
+              <DeleteIcon />
+            </IconButton>
           </Tooltip>
         </>
+      ) : (
+        <Tooltip title="Back to Blog">
+          <Link to={`/blogs`}>
+            <IconButton>
+              <ArrowBackOutlinedIcon />
+            </IconButton>
+          </Link>
+        </Tooltip>
       )}
     </Toolbar>
   );
 };
 
-export default function ListTopic() {
+export default function ListTrashBlog() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const { data, isLoading } = useTopics({});
+  const { data, isLoading } = useTrashBlogs({});
   const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
-  const mutation = useRemoveTopic();
+  const mutationRemove = useRemoveForeverBlog();
+  const mutationRestore = useRestoreBlog();
   const toastId = React.useRef<any>(null);
+  const [previewContent, setPreviewContent] = React.useState<any>({});
+  const [openPreviewContent, setOpenPreviewContent] =
+    React.useState<boolean>(false);
 
   const rows = React.useMemo(() => {
-    if (data) {
-      const rows = data.map((topic: any) => {
-        return createData(topic.id, topic.name, topic.is_public, topic.slug);
+    if (data?.results) {
+      const rows = data?.results?.map((blog: any) => {
+        return createData(
+          blog?.id,
+          blog?.title,
+          blog?.description,
+          blog?.author,
+          blog?.image,
+          blog?.topics,
+          blog?.content,
+          blog?.tags,
+          blog?.slug,
+          blog?.created_at,
+          blog?.updated_at,
+          blog?.is_public
+        );
       });
       return rows;
     }
@@ -334,11 +415,11 @@ export default function ListTopic() {
 
   const handleConfirmDelete = () => {
     (async () => {
-      toastId.current = toast("🦄 Đang xóa topic", { autoClose: false });
+      toastId.current = toast("🦄 Đang xóa blog", { autoClose: false });
       try {
-        await mutation.mutateAsync(selected);
+        await mutationRemove.mutateAsync(selected);
         toast.update(toastId.current, {
-          render: "🦄 Xóa topic thành công",
+          render: "🦄 Xóa blog thành công",
           autoClose: 5000,
           type: toast.TYPE.SUCCESS,
         });
@@ -346,7 +427,30 @@ export default function ListTopic() {
         setSelected([]);
       } catch (e: any) {
         toast.update(toastId.current, {
-          render: "🦄 Xóa topic thất bại",
+          render: "🦄 Xóa blog thất bại",
+          autoClose: 5000,
+          type: toast.TYPE.ERROR,
+        });
+      }
+    })();
+  };
+
+  //xử lý restore data
+  const handleRestore = () => {
+    (async () => {
+      toastId.current = toast("🦄 Đang restore blog", { autoClose: false });
+      try {
+        await mutationRestore.mutateAsync(selected);
+        toast.update(toastId.current, {
+          render: "🦄 Restore blog thành công",
+          autoClose: 5000,
+          type: toast.TYPE.SUCCESS,
+        });
+        setOpenConfirmDelete(false);
+        setSelected([]);
+      } catch (e: any) {
+        toast.update(toastId.current, {
+          render: "🦄 Restore blog thất bại",
           autoClose: 5000,
           type: toast.TYPE.ERROR,
         });
@@ -388,6 +492,7 @@ export default function ListTopic() {
         <EnhancedTableToolbar
           numSelected={selected.length}
           handleDelete={handleDelete}
+          handleRestore={handleRestore}
         />
         <TableContainer>
           <Table
@@ -408,10 +513,11 @@ export default function ListTopic() {
               rows.slice().sort(getComparator(order, orderBy)) */}
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((row: any, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  const topics = row?.topics;
+                  const tags = row?.tags;
                   return (
                     <TableRow
                       hover
@@ -440,15 +546,47 @@ export default function ListTopic() {
                       >
                         {row.id}
                       </TableCell>
-                      <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{row.title}</TableCell>
+                      <TableCell align="center">
+                        {row.author.username}
+                      </TableCell>
+                      <TableCell align="center">
+                        {topics
+                          ? topics?.map((topic: any) => topic.name).join(", ")
+                          : ""}
+                      </TableCell>
+                      <TableCell align="center">
+                        {tags
+                          ? tags?.map((tag: any) => tag.name).join(", ")
+                          : ""}
+                      </TableCell>
                       <TableCell align="center">{`${row.is_public}`}</TableCell>
                       <TableCell align="center">
+                        {new Date(row.created_at).toUTCString()}
+                      </TableCell>
+                      <TableCell align="center">
+                        {new Date(row.updated_at).toUTCString()}
+                      </TableCell>
+                      <TableCell align="center">
                         <Link
-                          to={`/topics/${row.slug}`}
+                          to={`/blogs/${row.slug}`}
                           style={{ textDecoration: "none" }}
                         >
                           <ButtonPrimary>Chỉnh sửa</ButtonPrimary>
                         </Link>
+                      </TableCell>
+                      <TableCell align="center">
+                        <ButtonPrimary
+                          onClick={() => {
+                            setPreviewContent({
+                              title: row.title,
+                              content: row.content,
+                            });
+                            setOpenPreviewContent(true);
+                          }}
+                        >
+                          Preview
+                        </ButtonPrimary>
                       </TableCell>
                     </TableRow>
                   );
@@ -476,11 +614,17 @@ export default function ListTopic() {
         />
       </Paper>
       <DialogConfirm
-        message={"Bạn có chắc chắn muốn topic này?"}
+        message={"Bạn có chắc chắn muốn blog này?"}
         open={openConfirmDelete}
-        title={"Xóa topic"}
+        title={"Xóa blog"}
         handleConfirm={handleConfirmDelete}
         handleClose={() => setOpenConfirmDelete(false)}
+      />
+      <PreviewContent
+        open={openPreviewContent}
+        onClose={() => setOpenPreviewContent(false)}
+        title={previewContent.title}
+        content={previewContent.content}
       />
     </Box>
   );

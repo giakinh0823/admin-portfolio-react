@@ -13,6 +13,25 @@ const tagApi = {
       },
     });
   },
+  getAllTrash(params: ListParams): Promise<Tag[]> {
+    const url = "/tags/trash/";
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.get(url, {
+      params,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+  restore(data: any): Promise<Tag[]> {
+    const url = "/tags/trash/";
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
   getById(id: string): Promise<Tag> {
     const url = `/tags/${id}/`;
     const access_token = localStorage.getItem("access_token");
@@ -42,6 +61,15 @@ const tagApi = {
   },
   removeAll(data: any): Promise<Tag> {
     const url = `/tags/remove/`;
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+  removeForeverAll(data: any): Promise<Tag> {
+    const url = `/tags/remove-forever/`;
     const access_token = localStorage.getItem("access_token");
     return axiosClient.post(url, data, {
       headers: {

@@ -13,6 +13,25 @@ const blogApi = {
       },
     });
   },
+  getAllTrash(params: ListParams): Promise<Topic[]> {
+    const url = "/topics/trash/";
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.get(url, {
+      params,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+  restore(data: any): Promise<Topic[]> {
+    const url = "/topics/trash/";
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
   getById(id: string): Promise<Topic> {
     const url = `/topics/${id}/`;
     const access_token = localStorage.getItem("access_token");
@@ -51,6 +70,15 @@ const blogApi = {
   },
   removeAll(data: any): Promise<Topic> {
     const url = `/topics/remove/`;
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+  removeForeverAll(data: any): Promise<Topic> {
+    const url = `/topics/remove-forever/`;
     const access_token = localStorage.getItem("access_token");
     return axiosClient.post(url, data, {
       headers: {

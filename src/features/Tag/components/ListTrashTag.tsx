@@ -1,6 +1,6 @@
-import AddIcon from "@mui/icons-material/Add";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -21,30 +21,23 @@ import { visuallyHidden } from "@mui/utils";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
-import { useRemoveTopic } from "../../../hooks/topic/useRemoveTopic";
-import useTopics from "../../../hooks/topic/useTopics";
+import { useRemoveForeverTag } from "../../../hooks/tag/useRemoveForeverTag";
+import { useRestoreTag } from "../../../hooks/tag/useRestoreTag";
+import useTrashTags from "../../../hooks/topic/useTrashTopics";
 
 interface Data {
   id: string;
   name: string;
   is_public: boolean;
-  slug: string;
 }
 
-function createData(
-  id: string,
-  name: string,
-  is_public: boolean,
-  slug: string
-): Data {
+function createData(id: string, name: string, is_public: boolean): Data {
   return {
     id,
     name,
     is_public,
-    slug,
   };
 }
 
@@ -88,7 +81,7 @@ function stableSort<T>(array: any[], comparator: (a: T, b: T) => number) {
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: any;
   label: string;
   numeric: boolean;
 }
@@ -111,12 +104,6 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: "Public",
-  },
-  {
-    id: "slug",
-    numeric: true,
-    disablePadding: false,
-    label: "Action",
   },
 ];
 
@@ -189,6 +176,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 interface EnhancedTableToolbarProps {
   numSelected: number;
   handleDelete?: any;
+  handleRestore?: any;
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
@@ -224,52 +212,51 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           id="tableTitle"
           component="div"
         >
-          Topics
+          Tags
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={() => props.handleDelete()}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
         <>
-          <Tooltip title="Create Topic">
-            <Link to={`/topics/create`}>
-              <IconButton>
-                <AddIcon />
-              </IconButton>
-            </Link>
+          <Tooltip title="Delete">
+            <IconButton onClick={() => props.handleRestore()}>
+              <RefreshOutlinedIcon />
+            </IconButton>
           </Tooltip>
-          <Tooltip title="Thùng rác">
-            <Link to={`/topics/trash`}>
-              <IconButton>
-                <DeleteSweepOutlinedIcon />
-              </IconButton>
-            </Link>
+          <Tooltip title="Delete">
+            <IconButton onClick={() => props.handleDelete()}>
+              <DeleteIcon />
+            </IconButton>
           </Tooltip>
         </>
+      ) : (
+        <Tooltip title="Back to tag">
+          <Link to={`/tags`}>
+            <IconButton>
+              <ArrowBackOutlinedIcon />
+            </IconButton>
+          </Link>
+        </Tooltip>
       )}
     </Toolbar>
   );
 };
 
-export default function ListTopic() {
+export default function ListTrashTag() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const { data, isLoading } = useTopics({});
+  const { data, isLoading } = useTrashTags({});
   const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
-  const mutation = useRemoveTopic();
+  const mutationRemove = useRemoveForeverTag();
+  const mutationRestore = useRestoreTag();
   const toastId = React.useRef<any>(null);
 
   const rows = React.useMemo(() => {
     if (data) {
-      const rows = data.map((topic: any) => {
-        return createData(topic.id, topic.name, topic.is_public, topic.slug);
+      const rows = data.map((tag: any) => {
+        return createData(tag.id, tag.name, tag.is_public);
       });
       return rows;
     }
@@ -327,18 +314,18 @@ export default function ListTopic() {
 
   const isSelected = (id: any) => selected.indexOf(id) !== -1;
 
-  // xử lý xóa topics
+  // xử lý xóa tag
   const handleDelete = () => {
     setOpenConfirmDelete(true);
   };
 
   const handleConfirmDelete = () => {
     (async () => {
-      toastId.current = toast("🦄 Đang xóa topic", { autoClose: false });
+      toastId.current = toast("🦄 Đang xóa tag", { autoClose: false });
       try {
-        await mutation.mutateAsync(selected);
+        await mutationRemove.mutateAsync(selected);
         toast.update(toastId.current, {
-          render: "🦄 Xóa topic thành công",
+          render: "🦄 Xóa tag thành công",
           autoClose: 5000,
           type: toast.TYPE.SUCCESS,
         });
@@ -346,7 +333,29 @@ export default function ListTopic() {
         setSelected([]);
       } catch (e: any) {
         toast.update(toastId.current, {
-          render: "🦄 Xóa topic thất bại",
+          render: "🦄 Xóa tag thất bại",
+          autoClose: 5000,
+          type: toast.TYPE.ERROR,
+        });
+      }
+    })();
+  };
+
+  const handleRestore = () => {
+    (async () => {
+      toastId.current = toast("🦄 Đang restore tag", { autoClose: false });
+      try {
+        await mutationRestore.mutateAsync(selected);
+        toast.update(toastId.current, {
+          render: "🦄 Restore tag thành công",
+          autoClose: 5000,
+          type: toast.TYPE.SUCCESS,
+        });
+        setOpenConfirmDelete(false);
+        setSelected([]);
+      } catch (e: any) {
+        toast.update(toastId.current, {
+          render: "🦄 Restore tag thất bại",
           autoClose: 5000,
           type: toast.TYPE.ERROR,
         });
@@ -388,6 +397,7 @@ export default function ListTopic() {
         <EnhancedTableToolbar
           numSelected={selected.length}
           handleDelete={handleDelete}
+          handleRestore={handleRestore}
         />
         <TableContainer>
           <Table
@@ -442,14 +452,6 @@ export default function ListTopic() {
                       </TableCell>
                       <TableCell align="center">{row.name}</TableCell>
                       <TableCell align="center">{`${row.is_public}`}</TableCell>
-                      <TableCell align="center">
-                        <Link
-                          to={`/topics/${row.slug}`}
-                          style={{ textDecoration: "none" }}
-                        >
-                          <ButtonPrimary>Chỉnh sửa</ButtonPrimary>
-                        </Link>
-                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -476,9 +478,9 @@ export default function ListTopic() {
         />
       </Paper>
       <DialogConfirm
-        message={"Bạn có chắc chắn muốn topic này?"}
+        message={"Bạn có chắc chắn muốn tag này?"}
         open={openConfirmDelete}
-        title={"Xóa topic"}
+        title={"Xóa tag"}
         handleConfirm={handleConfirmDelete}
         handleClose={() => setOpenConfirmDelete(false)}
       />

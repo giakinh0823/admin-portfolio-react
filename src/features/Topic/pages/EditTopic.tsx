@@ -1,3 +1,4 @@
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
 import * as React from "react";
@@ -28,7 +29,11 @@ export default function EditTopic(props: ICreateTopicProps) {
     (async () => {
       toastId.current = toast("🦄 Đang cập nhật topic", { autoClose: false });
       try {
-        await mutation.mutateAsync({ ...topic, name: data.name });
+        await mutation.mutateAsync({
+          ...topic,
+          name: data.name,
+          is_public: data.is_public,
+        });
         toast.update(toastId.current, {
           render: "🦄 Cập nhật topic thành công",
           autoClose: 5000,
@@ -39,6 +44,30 @@ export default function EditTopic(props: ICreateTopicProps) {
         toast.update(toastId.current, {
           render: "🦄 Cập nhật topic thất bại",
           autoClose: 5000,
+          type: toast.TYPE.ERROR,
+        });
+      }
+    })();
+  };
+
+  const handleChangePublic = (e: any) => {
+    const isPublic = e.target.checked;
+    (async () => {
+      toastId.current = toast("🦄 Đang cập nhật topic", { autoClose: false });
+      try {
+        await mutation.mutateAsync({
+          ...topic,
+          is_public: isPublic,
+        });
+        toast.update(toastId.current, {
+          render: "🦄 Cập nhật topic thành công",
+          autoClose: 1000,
+          type: toast.TYPE.SUCCESS,
+        });
+      } catch (e) {
+        toast.update(toastId.current, {
+          render: "🦄 Cập nhật topic thất bại",
+          autoClose: 1000,
           type: toast.TYPE.ERROR,
         });
       }
@@ -72,16 +101,32 @@ export default function EditTopic(props: ICreateTopicProps) {
           padding: "40px 50px",
         }}
       >
+        <Box
+          mb={3}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Box component="span">Public</Box>
+          <Switch
+            defaultChecked={data?.is_public}
+            onChange={handleChangePublic}
+          />
+        </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           {data && (
-            <TextField
-              id="topic"
-              label="Name"
-              variant="standard"
-              fullWidth
-              defaultValue={data?.name}
-              {...register("name", { required: true })}
-            />
+            <>
+              <TextField
+                id="topic"
+                label="Name"
+                variant="standard"
+                fullWidth
+                defaultValue={data?.name}
+                {...register("name", { required: true })}
+              />
+            </>
           )}
 
           <Box

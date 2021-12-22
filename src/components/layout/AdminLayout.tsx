@@ -15,6 +15,9 @@ import EditBlog from '../../features/Blog/pages/editBlog';
 import Tag from "../../features/Tag/pages";
 import CreateTag from "../../features/Tag/pages/CreateTag";
 import EditTag from "../../features/Tag/pages/EditTag";
+import TrashBlog from "../../features/Blog/pages/trashBlog";
+import TrashTag from "../../features/Tag/pages/trashTag";
+import TrashTopic from "../../features/Topic/pages/trashTopic";
 
 export function AdminLayout() {
   const [showSlideBar, setShowSlideBar] = React.useState(true);
@@ -34,11 +37,14 @@ export function AdminLayout() {
               <Route path="/" element={<DashBoard />} />
               <Route path="/blogs" element={<Blog />} />
               <Route path="/blogs/create" element={<CreateBlog />} />
+              <Route path="/blogs/trash" element={<TrashBlog />} />
               <Route path="/blogs/:slug" element={<EditBlog />} />
               <Route path="/topics" element={<Topic />} />
               <Route path="/topics/create" element={<CreateTopic />} />
+              <Route path="/topics/trash" element={<TrashTopic />} />
               <Route path="/topics/:slug" element={<EditTopic />} />
               <Route path="/tags" element={<Tag />} />
+              <Route path="/tags/trash" element={<TrashTag />} />
               <Route path="/tags/create" element={<CreateTag />} />
               <Route path="/tags/:id" element={<EditTag />} />
               <Route path="/photos" element={<Photo />} />

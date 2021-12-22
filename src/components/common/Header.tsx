@@ -3,10 +3,10 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { Link as MuiLink, Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import * as React from "react";
-import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hook';
-import { authActions } from '../../features/Auth/authSlice';
-import ButtonPrimary from "../button/ButtonPrimary";
+import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../app/hook";
+import { authActions } from "../../features/Auth/authSlice";
+import IconButton from '@mui/material/IconButton';
 
 export interface HeaderProps {
   onChangeShowSlide?: any;
@@ -21,9 +21,11 @@ export function Header({ onChangeShowSlide }: HeaderProps) {
         <Box>
           <Stack direction="row" alignItems="center">
             <Box>
-              <ButtonPrimary onClick={onChangeShowSlide}>
-                <MenuOutlinedIcon />
-              </ButtonPrimary>
+              <IconButton onClick={onChangeShowSlide}>
+                <MenuOutlinedIcon
+                  sx={{ cursor: "pointer", fontSize: "1.8rem" }}
+                />
+              </IconButton>
             </Box>
           </Stack>
         </Box>

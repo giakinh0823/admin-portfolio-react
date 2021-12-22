@@ -1,3 +1,4 @@
+import { Switch } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
 import * as React from "react";
@@ -45,6 +46,27 @@ export default function EditTag(props: ICreateTagProps) {
     })();
   };
 
+  const handleChangePublic = (e: any) => {
+    const isPublic = e.target.checked;
+    (async () => {
+      toastId.current = toast("🦄 Đang cập nhật tag", { autoClose: false });
+      try {
+        await mutation.mutateAsync({ ...tag, is_public: isPublic });
+        toast.update(toastId.current, {
+          render: "🦄 Cập nhật tag thành công",
+          autoClose: 1000,
+          type: toast.TYPE.SUCCESS,
+        });
+      } catch (e) {
+        toast.update(toastId.current, {
+          render: "🦄 Cập nhật tag thất bại",
+          autoClose: 1000,
+          type: toast.TYPE.ERROR,
+        });
+      }
+    })();
+  };
+
   if (isLoading) {
     return (
       <Box
@@ -72,6 +94,20 @@ export default function EditTag(props: ICreateTagProps) {
           padding: "40px 50px",
         }}
       >
+        <Box
+          mb={3}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Box component="span">Public</Box>
+          <Switch
+            defaultChecked={data?.is_public}
+            onChange={handleChangePublic}
+          />
+        </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           {data && (
             <TextField

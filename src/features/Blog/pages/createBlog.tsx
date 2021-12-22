@@ -16,12 +16,14 @@ import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-toastify";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import { useAppSelector } from "../../../app/hook";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import SelectMultiChip from "../../../components/select/SelectMultiChip";
 import { useCreateBlog } from "../../../hooks/blog/useCrateBlog";
 import usePhotos from "../../../hooks/photo/usePhotos";
 import useTags from "../../../hooks/tag/useTags";
 import useTopics from "../../../hooks/topic/useTopics";
+import { selectUser } from "../../Auth/authSlice";
 import PreviewContent from "../components/PreviewContent";
 import ShowListImage from "../components/ShowListImage";
 
@@ -40,6 +42,7 @@ export default function CreateBlog(props: ICreateBlogProps) {
   const toastId = React.useRef<any>(null);
   const mutation = useCreateBlog();
   const [openPreviewContent, setOpenPreviewContent] = React.useState<boolean>(false);
+  const user = useAppSelector(selectUser);
 
   let navigate = useNavigate();
 
@@ -51,7 +54,7 @@ export default function CreateBlog(props: ICreateBlogProps) {
         tags: data?.tags?.map((item: any) => item.value),
         topics: data?.topics?.map((item: any) => item.value),
         image: imageId ? imageId : undefined,
-        author: 1,
+        author: user.id,
       };
       (async () => {
         toastId.current = toast("🦄 Đang tạo blog", { autoClose: false });

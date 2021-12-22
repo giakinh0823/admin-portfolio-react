@@ -70,12 +70,12 @@ const Upload = ({ open, onClose, onUpload }: IAppProps) => {
               }}
             >
               <IconButton
-                color="error"
                 component="span"
                 sx={{
                   position: "absolute",
                   top: "0",
                   right: "0",
+                  color: "white"
                 }}
                 onClick={removeImage}
               >

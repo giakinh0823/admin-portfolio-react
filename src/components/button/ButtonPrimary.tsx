@@ -24,6 +24,7 @@ const ButtonPrimary = (props: any) => {
           bgcolor: lightColor ? lightColor : "#5c85ff",
         },
         color: "white",
+        minWidth: "100px",
         ...sx,
       }}
       variant="contained"

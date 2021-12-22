@@ -65,7 +65,7 @@ export default function FormLogin(props: IFormLoginProps) {
     >
       <Box mb={8}>
         <Typography variant="h3" textAlign="center" mb={2}>Hà Gia Kính</Typography>
-        <Typography variant="body1" textAlign="center">Đăng nhập</Typography>
+        <Typography variant="h6" textAlign="center">Đăng nhập</Typography>
       </Box>
       <form
         onSubmit={handleSubmit(onSubmit)}

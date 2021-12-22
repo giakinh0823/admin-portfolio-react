@@ -29,7 +29,6 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
             xs: "fixed",
             md: "relative",
           },
-
           width: showSlideBar ? "280px" : 0,
           backgroundColor: "white",
           zIndex: (theme: any) => theme.zIndex.drawer + 2,
@@ -38,11 +37,8 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
             boxSizing: "border-box",
             width: showSlideBar ? "280px" : 0,
             backgroundColor: "white",
-            borderRight: "0.1px solid #e8e8e8",
-            boxShadow: {
-              xs: "rgba(149, 157, 165, 0.5) 0px 8px 24px",
-              md: "none",
-            },
+            borderRight: "none",
+            boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
           },
         }}
       >
@@ -64,38 +60,49 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
               onClick={onCloseShowSlide}
             />
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }} mt={10}>
-            <Avatar
-              alt="Remy Sharp"
-              src={avatarImage}
-              sx={{ width: 120, height: 120 }}
-            />
-          </Box>
-          <Box>
-            <Typography
-              variant="h6"
-              gutterBottom
-              textAlign="center"
-              fontWeight="600"
-              mb={0}
-              mt={3}
-              sx={{
-                color: "#333",
-              }}
-            >
-              Hà Gia Kính
-            </Typography>
-            <Typography
-              variant="body1"
-              gutterBottom
-              textAlign="center"
-              fontSize="14px"
-              sx={{
-                color: "#333",
-              }}
-            >
-              Code để thành công
-            </Typography>
+          <Box  sx={{
+             boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+             padding: "40px 30px",
+             borderRadius: "30px",
+             margin: "80px 30px 0 30px",
+          }}>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Avatar
+                alt="Remy Sharp"
+                src={avatarImage}
+                sx={{
+                  width: 120,
+                  height: 120,
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography
+                variant="h6"
+                gutterBottom
+                textAlign="center"
+                fontWeight="600"
+                mb={0}
+                mt={3}
+                sx={{
+                  color: "#333",
+                }}
+              >
+                Hà Gia Kính
+              </Typography>
+              <Typography
+                variant="body1"
+                gutterBottom
+                textAlign="center"
+                fontSize="14px"
+                sx={{
+                  color: "#333",
+                  marginTop: "10px",
+                }}
+              >
+                Code để thành công
+              </Typography>
+            </Box>
           </Box>
         </Box>
         <Box
@@ -123,6 +130,9 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
                       display: "block",
                       textDecoration: "none",
                       color: isActive ? "#3766f4" : "#333",
+                      boxShadow: isActive
+                        ? "rgba(149, 157, 165, 0.2) 0px 8px 24px"
+                        : undefined,
                       fontWeight: "bold",
                       backgroundColor: isActive
                         ? "rgb(55 102 244 / 10%)"

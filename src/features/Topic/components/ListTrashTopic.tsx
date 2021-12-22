@@ -1,6 +1,6 @@
-import AddIcon from "@mui/icons-material/Add";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -24,8 +24,9 @@ import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
-import { useRemoveTopic } from "../../../hooks/topic/useRemoveTopic";
-import useTopics from "../../../hooks/topic/useTopics";
+import useTrashTopics from "../../../hooks/tag/useTrashTags";
+import { useRemoveForeverTopic } from "../../../hooks/topic/useRemoveForeverTopic";
+import { useRestoreTopic } from "../../../hooks/topic/useRestoreTopic";
 
 interface Data {
   id: string;
@@ -189,6 +190,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 interface EnhancedTableToolbarProps {
   numSelected: number;
   handleDelete?: any;
+  handleRestore?: any;
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
@@ -228,42 +230,41 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={() => props.handleDelete()}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
         <>
-          <Tooltip title="Create Topic">
-            <Link to={`/topics/create`}>
-              <IconButton>
-                <AddIcon />
-              </IconButton>
-            </Link>
+          <Tooltip title="Delete">
+            <IconButton onClick={() => props.handleRestore()}>
+              <RefreshOutlinedIcon />
+            </IconButton>
           </Tooltip>
-          <Tooltip title="Thùng rác">
-            <Link to={`/topics/trash`}>
-              <IconButton>
-                <DeleteSweepOutlinedIcon />
-              </IconButton>
-            </Link>
+          <Tooltip title="Delete">
+            <IconButton onClick={() => props.handleDelete()}>
+              <DeleteIcon />
+            </IconButton>
           </Tooltip>
         </>
+      ) : (
+        <Tooltip title="Back to topic">
+          <Link to={`/topics`}>
+            <IconButton>
+              <ArrowBackOutlinedIcon />
+            </IconButton>
+          </Link>
+        </Tooltip>
       )}
     </Toolbar>
   );
 };
 
-export default function ListTopic() {
+export default function ListTrashTopic() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const { data, isLoading } = useTopics({});
+  const { data, isLoading } = useTrashTopics({});
   const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
-  const mutation = useRemoveTopic();
+  const mutationForever = useRemoveForeverTopic();
+  const mutationRestore = useRestoreTopic();
   const toastId = React.useRef<any>(null);
 
   const rows = React.useMemo(() => {
@@ -336,7 +337,7 @@ export default function ListTopic() {
     (async () => {
       toastId.current = toast("🦄 Đang xóa topic", { autoClose: false });
       try {
-        await mutation.mutateAsync(selected);
+        await mutationForever.mutateAsync(selected);
         toast.update(toastId.current, {
           render: "🦄 Xóa topic thành công",
           autoClose: 5000,
@@ -347,6 +348,28 @@ export default function ListTopic() {
       } catch (e: any) {
         toast.update(toastId.current, {
           render: "🦄 Xóa topic thất bại",
+          autoClose: 5000,
+          type: toast.TYPE.ERROR,
+        });
+      }
+    })();
+  };
+
+  const handleRestore = () => {
+    (async () => {
+      toastId.current = toast("🦄 Đang restore topic", { autoClose: false });
+      try {
+        await mutationRestore.mutateAsync(selected);
+        toast.update(toastId.current, {
+          render: "🦄 Restore topic thành công",
+          autoClose: 5000,
+          type: toast.TYPE.SUCCESS,
+        });
+        setOpenConfirmDelete(false);
+        setSelected([]);
+      } catch (e: any) {
+        toast.update(toastId.current, {
+          render: "🦄 Restore topic thất bại",
           autoClose: 5000,
           type: toast.TYPE.ERROR,
         });
@@ -388,6 +411,7 @@ export default function ListTopic() {
         <EnhancedTableToolbar
           numSelected={selected.length}
           handleDelete={handleDelete}
+          handleRestore={handleRestore}
         />
         <TableContainer>
           <Table

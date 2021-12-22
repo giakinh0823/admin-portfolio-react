@@ -26,6 +26,7 @@ import useTags from "../../../hooks/tag/useTags";
 import useTopics from "../../../hooks/topic/useTopics";
 import PreviewContent from "../components/PreviewContent";
 import ShowListImage from "../components/ShowListImage";
+import Switch from "@mui/material/Switch";
 
 export interface ICreateBlogProps {}
 
@@ -70,9 +71,9 @@ export default function EditBlog(props: ICreateBlogProps) {
       const newData = {
         ...datas,
         content: content ? content : "",
-        tags: datas?.tags?.map((item: any) => item.value || item.id ),
+        tags: datas?.tags?.map((item: any) => item.value || item.id),
         topics: datas?.topics?.map((item: any) => item.value || item.id),
-        image: imageId ? imageId : undefined,
+        image: imageId ? imageId : "",
         author: 1,
         id: data?.id,
       };
@@ -98,6 +99,40 @@ export default function EditBlog(props: ICreateBlogProps) {
         }
       })();
     }
+  };
+
+  const handleChangePublic = (e: any) => {
+    const isPublic = e.target.checked;
+    const newData = {
+      description: data?.description,
+      content: data?.content,
+      tags: data?.tags?.map((item: any) => item.value || item.id),
+      topics: data?.topics?.map((item: any) => item.value || item.id),
+      image: data?.image ? data?.image?.id: undefined,
+      author: data?.author ? data?.author.id: undefined,
+      id: data?.id,
+      is_public: isPublic,
+    };
+    (async () => {
+      toastId.current = toast("🦄 Đang cập nhật blog", { autoClose: false });
+      try {
+        await mutation.mutateAsync(newData);
+        toast.update(toastId.current, {
+          render: "🦄 Cập nhật blog thành công",
+          autoClose: 5000,
+          type: toast.TYPE.SUCCESS,
+        });
+        form.reset();
+        setImageId(undefined);
+        setImagePreview(undefined);
+      } catch (e) {
+        toast.update(toastId.current, {
+          render: "🦄 Cập nhật blog thất bại",
+          autoClose: 5000,
+          type: toast.TYPE.ERROR,
+        });
+      }
+    })();
   };
 
   React.useEffect(() => {
@@ -144,6 +179,20 @@ export default function EditBlog(props: ICreateBlogProps) {
           maxWidth: "100%",
         }}
       >
+        <Box
+          mb={3}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Box component="span">Public</Box>
+          <Switch
+            defaultChecked={data?.is_public}
+            onChange={handleChangePublic}
+          />
+        </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box mb={3}>
             <TextField

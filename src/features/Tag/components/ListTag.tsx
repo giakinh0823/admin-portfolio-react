@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -29,12 +30,14 @@ import useTags from "../../../hooks/tag/useTags";
 interface Data {
   id: string;
   name: string;
+  is_public: boolean;
 }
 
-function createData(id: string, name: string): Data {
+function createData(id: string, name: string, is_public: boolean): Data {
   return {
     id,
     name,
+    is_public,
   };
 }
 
@@ -64,10 +67,7 @@ function getComparator<Key extends keyof any>(
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
+function stableSort<T>(array: any[], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -98,6 +98,12 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: "Name",
+  },
+  {
+    id: "is_public",
+    numeric: true,
+    disablePadding: false,
+    label: "Public",
   },
   {
     id: "",
@@ -221,13 +227,22 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Create Topic">
-          <Link to={`/tags/create`}>
-            <IconButton>
-              <AddIcon />
-            </IconButton>
-          </Link>
-        </Tooltip>
+        <>
+          <Tooltip title="Create Topic">
+            <Link to={`/tags/create`}>
+              <IconButton>
+                <AddIcon />
+              </IconButton>
+            </Link>
+          </Tooltip>
+          <Tooltip title="Thùng rác">
+            <Link to={`/tags/trash`}>
+              <IconButton>
+                <DeleteSweepOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Tooltip>
+        </>
       )}
     </Toolbar>
   );
@@ -247,7 +262,7 @@ export default function ListTag() {
   const rows = React.useMemo(() => {
     if (data) {
       const rows = data.map((tag: any) => {
-        return createData(tag.id, tag.name);
+        return createData(tag.id, tag.name, tag.is_public);
       });
       return rows;
     }
@@ -272,7 +287,7 @@ export default function ListTag() {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: any) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly string[] = [];
 
@@ -303,7 +318,7 @@ export default function ListTag() {
     setPage(0);
   };
 
-  const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const isSelected = (id: any) => selected.indexOf(id) !== -1;
 
   // xử lý xóa tag
   const handleDelete = () => {
@@ -419,6 +434,7 @@ export default function ListTag() {
                         {row.id}
                       </TableCell>
                       <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{`${row.is_public}`}</TableCell>
                       <TableCell align="center">
                         <Link
                           to={`/tags/${row.id}`}

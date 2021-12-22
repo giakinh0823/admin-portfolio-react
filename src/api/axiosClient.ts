@@ -1,7 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
+const baseURL = process.env.REACT_API_URL ?? "http://127.0.0.1:8000";
+
+
 const axiosClient = axios.create({
-    baseURL: 'https://hagiakinh-api.herokuapp.com/api/admin/',
+    baseURL: `${baseURL}/api/admin/`,
     headers: {
         'Content-Type': 'application/json',
     },

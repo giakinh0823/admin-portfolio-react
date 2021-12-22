@@ -26,6 +26,8 @@ import CrcularProgress from "../../../components/progress/CrcularProgress";
 import useBlogs from "../../../hooks/blog/useBlogs";
 import { useRemoveBlog } from "../../../hooks/blog/useRemoveBlog";
 import PreviewContent from "./PreviewContent";
+import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+
 
 interface Data {
   id: string;
@@ -150,6 +152,24 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: "Tags",
+  },
+  {
+    id: "is_public",
+    numeric: true,
+    disablePadding: false,
+    label: "Public",
+  },
+  {
+    id: "created_at",
+    numeric: true,
+    disablePadding: false,
+    label: "Created",
+  },
+  {
+    id: "updated_at",
+    numeric: true,
+    disablePadding: false,
+    label: "Updated",
   },
   {
     id: "slug",
@@ -279,13 +299,22 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Create Topic">
-          <Link to={`/blogs/create`}>
-            <IconButton>
-              <AddIcon />
-            </IconButton>
-          </Link>
-        </Tooltip>
+        <>
+          <Tooltip title="Create Blog">
+            <Link to={`/blogs/create`}>
+              <IconButton>
+                <AddIcon />
+              </IconButton>
+            </Link>
+          </Tooltip>
+          <Tooltip title="Thùng rác">
+            <Link to={`/blogs/trash`}>
+              <IconButton>
+                <DeleteSweepOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Tooltip>
+        </>
       )}
     </Toolbar>
   );
@@ -507,7 +536,13 @@ export default function ListBlog() {
                           ? tags?.map((tag: any) => tag.name).join(", ")
                           : ""}
                       </TableCell>
-                      {/* <TableCell align="center">{row.title}</TableCell> */}
+                      <TableCell align="center">{`${row.is_public}`}</TableCell>
+                      <TableCell align="center">
+                        {new Date(row.created_at).toUTCString()}
+                      </TableCell>
+                      <TableCell align="center">
+                        {new Date(row.updated_at).toUTCString()}
+                      </TableCell>
                       <TableCell align="center">
                         <Link
                           to={`/blogs/${row.slug}`}

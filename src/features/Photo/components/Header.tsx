@@ -56,10 +56,10 @@ const Header = ({
     <Box
       sx={{
         width: "100%",
-        height: "80px",
         borderBottom: "1px solid #e5e5e5",
         boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
         borderRadius: "10px",
+        padding: "20px 0",
       }}
     >
       <Stack
@@ -69,18 +69,30 @@ const Header = ({
         height="100%"
         width="100%"
         px={6}
+        spacing={3}
+        sx={{
+          flexWrap: "wrap",
+        }}
       >
         <Box>
-          <Stack direction="row" alignItems="center" spacing={3}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={3}
+            sx={{
+              flexWrap: "wrap",
+            }}
+          >
             <Stack direction="row" alignItems="center">
               <Checkbox onChange={handleChekbox} checked={selected} />
-              <Box component="span" sx={{ margin: 0 }}>
+              <Box component="span" sx={{ margin: 0, minWidth: "70px" }}>
                 Select All
               </Box>
             </Stack>
             <Box>
               <ButtonPrimary
                 onClick={() => handleRemoveSelect()}
+                sx={{ minWidth: "160px" }}
               >
                 Remove Select All
               </ButtonPrimary>
