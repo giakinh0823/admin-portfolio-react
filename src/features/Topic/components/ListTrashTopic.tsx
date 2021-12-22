@@ -1,5 +1,6 @@
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -21,7 +22,6 @@ import { visuallyHidden } from "@mui/utils";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
 import useTrashTopics from "../../../hooks/tag/useTrashTags";
@@ -471,7 +471,9 @@ export default function ListTrashTopic() {
                           to={`/topics/${row.slug}`}
                           style={{ textDecoration: "none" }}
                         >
-                          <ButtonPrimary>Chỉnh sửa</ButtonPrimary>
+                           <IconButton>
+                            <ModeEditOutlineOutlinedIcon />
+                          </IconButton>
                         </Link>
                       </TableCell>
                     </TableRow>

@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import { useUpload } from "../../../hooks/photo/useUpload";
 import Upload from "./Upload";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+
 export interface IHeaderProps {
   handleRemove: () => void;
   selected: boolean;
@@ -100,12 +102,8 @@ const Header = ({
             <Box>
               <ButtonPrimary
                 onClick={() => handleRemove()}
-                color="error.main"
-                darkColor="#e90d37"
-                lightColor="#ff2f57"
-                boxShadow="rgb(255 23 68 / 30%) 0px 12px 14px 0px"
               >
-                Remove
+                <DeleteOutlineOutlinedIcon/>
               </ButtonPrimary>
             </Box>
           </Stack>

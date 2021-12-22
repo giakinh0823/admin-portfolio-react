@@ -1,6 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -21,7 +22,6 @@ import { visuallyHidden } from "@mui/utils";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
 import { useRemoveTag } from "../../../hooks/tag/useRemoveTag";
@@ -440,7 +440,9 @@ export default function ListTag() {
                           to={`/tags/${row.id}`}
                           style={{ textDecoration: "none" }}
                         >
-                          <ButtonPrimary>Chỉnh sửa</ButtonPrimary>
+                          <IconButton>
+                            <ModeEditOutlineOutlinedIcon />
+                          </IconButton>
                         </Link>
                       </TableCell>
                     </TableRow>

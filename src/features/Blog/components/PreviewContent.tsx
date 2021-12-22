@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from '@mui/material/IconButton';
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import ReactMarkdown from "react-markdown";
@@ -11,7 +12,6 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
-import ButtonPrimary from "../../../components/button/ButtonPrimary";
 
 export interface IPreviewProps {
   content: any;
@@ -45,9 +45,9 @@ export default function PreviewContent({
               {title && <Typography variant="h5">{title}</Typography>}
               {!title && <Typography variant="h5">Preview</Typography>}
             </Box>
-            <ButtonPrimary onClick={onClose}>
+            <IconButton onClick={onClose}>
               <CloseIcon />
-            </ButtonPrimary>
+            </IconButton>
           </Stack>
         </DialogTitle>
         <DialogContent>

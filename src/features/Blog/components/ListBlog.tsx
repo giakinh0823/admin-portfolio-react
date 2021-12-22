@@ -1,5 +1,8 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -20,14 +23,11 @@ import { visuallyHidden } from "@mui/utils";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import DialogConfirm from "../../../components/dialog/DialogConfirm";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
 import useBlogs from "../../../hooks/blog/useBlogs";
 import { useRemoveBlog } from "../../../hooks/blog/useRemoveBlog";
 import PreviewContent from "./PreviewContent";
-import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
-
 
 interface Data {
   id: string;
@@ -548,11 +548,13 @@ export default function ListBlog() {
                           to={`/blogs/${row.slug}`}
                           style={{ textDecoration: "none" }}
                         >
-                          <ButtonPrimary>Chỉnh sửa</ButtonPrimary>
+                          <IconButton>
+                            <SettingsOutlinedIcon />
+                          </IconButton>
                         </Link>
                       </TableCell>
                       <TableCell align="center">
-                        <ButtonPrimary
+                        <IconButton
                           onClick={() => {
                             setPreviewContent({
                               title: row.title,
@@ -561,8 +563,8 @@ export default function ListBlog() {
                             setOpenPreviewContent(true);
                           }}
                         >
-                          Preview
-                        </ButtonPrimary>
+                          <VisibilityOutlinedIcon />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   );
