@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const baseURL = process.env.REACT_API_URL ?? "http://127.0.0.1:8000";
+const baseURL = "https://hagiakinh-api.herokuapp.com";
 
 
 const axiosClient = axios.create({
