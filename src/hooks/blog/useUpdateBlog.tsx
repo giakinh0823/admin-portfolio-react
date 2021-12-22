@@ -6,6 +6,7 @@ export function useUpdateBlog() {
   return useMutation(async (data: any) => await blogApi.update(data), {
     onSettled: (data: any) => {
       queryClient.invalidateQueries("blogs");
+      queryClient.invalidateQueries(`blog/${data?.slug}`);
     }
   });
 }

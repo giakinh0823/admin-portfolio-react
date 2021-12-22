@@ -50,7 +50,7 @@ export default function EditBlog(props: ICreateBlogProps) {
   const topics = useTopics({});
   const [showImage, setShowImage] = React.useState(false);
   const [imageId, setImageId] = React.useState<any>();
-  const [imagePreviw, setImagePreview] = React.useState<any>();
+  const [imagePreview, setImagePreview] = React.useState<any>();
   const [content, setContent] = React.useState<any>();
   const toastId = React.useRef<any>(null);
   const mutation = useUpdateBlog();
@@ -62,6 +62,7 @@ export default function EditBlog(props: ICreateBlogProps) {
   React.useEffect(() => {
     if (data) {
       setImageId(data?.image?.id);
+      setImagePreview(data?.image?.url);
       setContent(data?.content);
     }
   }, [data]);
@@ -75,6 +76,7 @@ export default function EditBlog(props: ICreateBlogProps) {
         topics: datas?.topics?.map((item: any) => item.value || item.id),
         image: imageId ? imageId : "",
         author: 1,
+        slug: data?.slug,
         id: data?.id,
       };
       (async () => {
@@ -108,9 +110,10 @@ export default function EditBlog(props: ICreateBlogProps) {
       content: data?.content,
       tags: data?.tags?.map((item: any) => item.value || item.id),
       topics: data?.topics?.map((item: any) => item.value || item.id),
-      image: data?.image ? data?.image?.id: undefined,
-      author: data?.author ? data?.author.id: undefined,
+      image: data?.image ? data?.image?.id : undefined,
+      author: data?.author ? data?.author.id : undefined,
       id: data?.id,
+      slug: data?.slug,
       is_public: isPublic,
     };
     (async () => {
@@ -123,8 +126,6 @@ export default function EditBlog(props: ICreateBlogProps) {
           type: toast.TYPE.SUCCESS,
         });
         form.reset();
-        setImageId(undefined);
-        setImagePreview(undefined);
       } catch (e) {
         toast.update(toastId.current, {
           render: "🦄 Cập nhật blog thất bại",
@@ -274,10 +275,10 @@ export default function EditBlog(props: ICreateBlogProps) {
               <SelectMultiChip
                 name="topics"
                 label="Topics"
-                defaultValue={data?.topics.map((topic: any) => ({
+                defaultValue={data?.topics ? data?.topics.map((topic: any) => ({
                   label: topic?.name,
                   value: topic?.id,
-                }))}
+                })): []}
                 required={true}
                 options={
                   topics?.data
@@ -291,10 +292,10 @@ export default function EditBlog(props: ICreateBlogProps) {
               />
               <SelectMultiChip
                 required={true}
-                defaultValue={data?.tags.map((tag: any) => ({
+                defaultValue={data?.tags ? data?.tags.map((tag: any) => ({
                   label: tag?.name,
                   value: tag?.id,
-                }))}
+                })): []}
                 name="tags"
                 label="Tags"
                 options={
@@ -317,8 +318,8 @@ export default function EditBlog(props: ICreateBlogProps) {
             }}
           >
             <Box sx={{ maxWidth: "500px", mb: 3, position: "relative" }}>
-              {imagePreviw && (
-                <img src={imagePreviw?.url} alt="" style={{ width: "100%" }} />
+              {imagePreview && (
+                <img src={imagePreview?.url} alt="" style={{ width: "100%" }} />
               )}
               <Box sx={{ position: "absolute", right: "10px", top: "10px" }}>
                 <IconButton

@@ -32,6 +32,7 @@ export default function EditTopic(props: ICreateTopicProps) {
         await mutation.mutateAsync({
           ...topic,
           name: data.name,
+          slug: topic.slug,
           is_public: data.is_public,
         });
         toast.update(toastId.current, {
@@ -57,6 +58,7 @@ export default function EditTopic(props: ICreateTopicProps) {
       try {
         await mutation.mutateAsync({
           ...topic,
+          slug: topic.slug,
           is_public: isPublic,
         });
         toast.update(toastId.current, {
