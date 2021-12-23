@@ -1,7 +1,9 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import CloseIcon from "@mui/icons-material/Close";
 import { Stack } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
 import clsx from "clsx";
@@ -10,7 +12,7 @@ import { useForm } from "react-hook-form";
 import ReactMarkdown from "react-markdown";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-toastify";
@@ -26,7 +28,6 @@ import useTags from "../../../hooks/tag/useTags";
 import useTopics from "../../../hooks/topic/useTopics";
 import PreviewContent from "../components/PreviewContent";
 import ShowListImage from "../components/ShowListImage";
-import Switch from "@mui/material/Switch";
 
 export interface ICreateBlogProps {}
 
@@ -184,15 +185,25 @@ export default function EditBlog(props: ICreateBlogProps) {
           mb={3}
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
+            width: "100%",
           }}
         >
-          <Box component="span">Public</Box>
-          <Switch
-            defaultChecked={data?.is_public}
-            onChange={handleChangePublic}
-          />
+          <Box>
+            <Link to={`/blogs`}>
+              <IconButton>
+                <ArrowBackOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Box>
+          <Box>
+            <Box component="span">Public</Box>
+            <Switch
+              defaultChecked={data?.is_public}
+              onChange={handleChangePublic}
+            />
+          </Box>
         </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box mb={3}>
@@ -275,10 +286,14 @@ export default function EditBlog(props: ICreateBlogProps) {
               <SelectMultiChip
                 name="topics"
                 label="Topics"
-                defaultValue={data?.topics ? data?.topics.map((topic: any) => ({
-                  label: topic?.name,
-                  value: topic?.id,
-                })): []}
+                defaultValue={
+                  data?.topics
+                    ? data?.topics.map((topic: any) => ({
+                        label: topic?.name,
+                        value: topic?.id,
+                      }))
+                    : []
+                }
                 required={true}
                 options={
                   topics?.data
@@ -292,10 +307,14 @@ export default function EditBlog(props: ICreateBlogProps) {
               />
               <SelectMultiChip
                 required={true}
-                defaultValue={data?.tags ? data?.tags.map((tag: any) => ({
-                  label: tag?.name,
-                  value: tag?.id,
-                })): []}
+                defaultValue={
+                  data?.tags
+                    ? data?.tags.map((tag: any) => ({
+                        label: tag?.name,
+                        value: tag?.id,
+                      }))
+                    : []
+                }
                 name="tags"
                 label="Tags"
                 options={
@@ -334,9 +353,9 @@ export default function EditBlog(props: ICreateBlogProps) {
             </Box>
           </Box>
           <Box mb={3} mx={1}>
-            <ButtonPrimary onClick={() => setShowImage(true)}>
-              <AddPhotoAlternateIcon /> chọn hình ảnh
-            </ButtonPrimary>
+            <IconButton color="primary" onClick={() => setShowImage(true)}>
+              <AddPhotoAlternateIcon />
+            </IconButton>
             <ShowListImage
               open={showImage}
               handleClose={() => setShowImage(false)}

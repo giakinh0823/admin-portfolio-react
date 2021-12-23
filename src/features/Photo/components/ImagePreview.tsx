@@ -1,3 +1,5 @@
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { IconButton } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -5,7 +7,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Box } from "@mui/system";
 import * as React from "react";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 export interface IImagePreviewProps {
   image: any;
@@ -49,11 +50,12 @@ const ImagePreview = ({ image, open, onClose,handleRemove }: IImagePreviewProps)
           )}
         </DialogContent>
         <DialogActions>
-          <ButtonPrimary
+          <IconButton
+            color="primary"
             onClick={handleRemove}
           >
             <DeleteOutlineOutlinedIcon/>
-          </ButtonPrimary>
+          </IconButton>
           <ButtonPrimary onClick={onClose}>Thoát</ButtonPrimary>
         </DialogActions>
       </Dialog>

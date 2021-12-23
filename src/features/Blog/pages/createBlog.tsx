@@ -1,4 +1,5 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import CloseIcon from "@mui/icons-material/Close";
 import { Stack } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -10,7 +11,7 @@ import { useForm } from "react-hook-form";
 import ReactMarkdown from "react-markdown";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-toastify";
@@ -41,7 +42,8 @@ export default function CreateBlog(props: ICreateBlogProps) {
   const [content, setContent] = React.useState<any>();
   const toastId = React.useRef<any>(null);
   const mutation = useCreateBlog();
-  const [openPreviewContent, setOpenPreviewContent] = React.useState<boolean>(false);
+  const [openPreviewContent, setOpenPreviewContent] =
+    React.useState<boolean>(false);
   const user = useAppSelector(selectUser);
 
   let navigate = useNavigate();
@@ -108,6 +110,23 @@ export default function CreateBlog(props: ICreateBlogProps) {
           maxWidth: "100%",
         }}
       >
+        <Box
+          mb={2}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Box>
+            <Link to={`/blogs`}>
+              <IconButton>
+                <ArrowBackOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Box>
+        </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box mb={3}>
             <TextField
@@ -129,11 +148,11 @@ export default function CreateBlog(props: ICreateBlogProps) {
           </Box>
           <Box
             mb={3}
-            sx={{ "& code": { backgroundColor: "transparent"}  }}
+            sx={{ "& code": { backgroundColor: "transparent" } }}
             className={clsx("content-markdown", "markdown-edit")}
           >
             <MdEditor
-              style={{ height: "600px"}}
+              style={{ height: "600px" }}
               renderHTML={(text) => (
                 <ReactMarkdown
                   rehypePlugins={[rehypeRaw]}
@@ -235,9 +254,9 @@ export default function CreateBlog(props: ICreateBlogProps) {
             </Box>
           </Box>
           <Box mb={3} mx={1}>
-            <ButtonPrimary onClick={() => setShowImage(true)}>
-              <AddPhotoAlternateIcon /> chọn hình ảnh
-            </ButtonPrimary>
+            <IconButton color="primary" onClick={() => setShowImage(true)}>
+              <AddPhotoAlternateIcon />
+            </IconButton>
             <ShowListImage
               open={showImage}
               handleClose={() => setShowImage(false)}
@@ -246,7 +265,9 @@ export default function CreateBlog(props: ICreateBlogProps) {
           </Box>
           <Stack direction="row" spacing={2} mt={3} justifyContent="flex-end">
             <Box sx={{}}>
-              <ButtonPrimary onClick={() => setOpenPreviewContent(true)}>Preview</ButtonPrimary>
+              <ButtonPrimary onClick={() => setOpenPreviewContent(true)}>
+                Preview
+              </ButtonPrimary>
             </Box>
             <Box sx={{}}>
               <ButtonPrimary type="submit">Tạo Blog</ButtonPrimary>

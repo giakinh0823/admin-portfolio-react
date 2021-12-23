@@ -1,9 +1,11 @@
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import { IconButton } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
@@ -107,15 +109,25 @@ export default function EditTopic(props: ICreateTopicProps) {
           mb={3}
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
+            width: "100%",
           }}
         >
-          <Box component="span">Public</Box>
-          <Switch
-            defaultChecked={data?.is_public}
-            onChange={handleChangePublic}
-          />
+          <Box>
+            <Link to={`/topics`}>
+              <IconButton>
+                <ArrowBackOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Box>
+          <Box>
+            <Box component="span">Public</Box>
+            <Switch
+              defaultChecked={data?.is_public}
+              onChange={handleChangePublic}
+            />
+          </Box>
         </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           {data && (

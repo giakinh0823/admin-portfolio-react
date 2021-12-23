@@ -15,15 +15,15 @@ export default function Photo(props: IPhotoProps) {
 
   const handleChekbox = React.useCallback((e: any) => {
     setSelected(e.target.checked);
+    if(e.target.checked===false) {
+      ListPhotoRef.current.handleRemoveSelectAll();
+    }
   }, []);
 
   const handleChangeSelect = React.useCallback((checked: boolean) => {
     setSelected(checked);
   },[])
 
-  const handleRemoveSelect = React.useCallback(() => {
-    ListPhotoRef.current.handleRemoveSelectAll();
-  }, [])
 
   return (
     <Box component="div" sx={{ width: "100%" }}>
@@ -34,7 +34,7 @@ export default function Photo(props: IPhotoProps) {
           </Typography>
         </Box>
         <Box component="div" sx={{ width: "100%" }}>
-          <Header handleRemove={handleRemove} handleChekbox={handleChekbox} selected={selected} handleRemoveSelect={handleRemoveSelect}/>
+          <Header handleRemove={handleRemove} handleChekbox={handleChekbox} selected={selected}/>
         </Box>
         <Box sx={{ padding: "30px 0" }}>
           <ListPhoto selected={selected} ref={ListPhotoRef} handleChangeSelect={handleChangeSelect}/>

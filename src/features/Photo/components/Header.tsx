@@ -1,17 +1,16 @@
-import { Stack } from "@mui/material";
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { IconButton, Stack } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/system";
 import * as React from "react";
 import { toast } from "react-toastify";
-import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import { useUpload } from "../../../hooks/photo/useUpload";
 import Upload from "./Upload";
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 export interface IHeaderProps {
   handleRemove: () => void;
   selected: boolean;
-  handleRemoveSelect: any;
   handleChekbox: (e: any) => void;
 }
 
@@ -19,7 +18,6 @@ const Header = ({
   handleRemove,
   handleChekbox,
   selected,
-  handleRemoveSelect,
 }: IHeaderProps) => {
   const [open, setOpen] = React.useState(false);
   const mutation = useUpload();
@@ -92,27 +90,19 @@ const Header = ({
               </Box>
             </Stack>
             <Box>
-              <ButtonPrimary
-                onClick={() => handleRemoveSelect()}
-                sx={{ minWidth: "160px" }}
-              >
-                Remove Select All
-              </ButtonPrimary>
-            </Box>
-            <Box>
-              <ButtonPrimary
+              <IconButton color="primary"
                 onClick={() => handleRemove()}
               >
                 <DeleteOutlineOutlinedIcon/>
-              </ButtonPrimary>
+              </IconButton>
             </Box>
           </Stack>
         </Box>
         <Box>
           <Box>
-            <ButtonPrimary onClick={() => handleClickOpen()}>
-              Upload
-            </ButtonPrimary>
+            <IconButton color="primary" onClick={() => handleClickOpen()}>
+              <CloudUploadOutlinedIcon/>
+            </IconButton>
           </Box>
         </Box>
       </Stack>

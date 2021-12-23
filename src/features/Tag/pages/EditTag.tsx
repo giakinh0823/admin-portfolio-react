@@ -3,12 +3,14 @@ import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
 import CrcularProgress from "../../../components/progress/CrcularProgress";
 import useTag from "../../../hooks/tag/useTag";
 import useUpdateTag from "../../../hooks/tag/useUpdateTag";
+import IconButton from '@mui/material/IconButton';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 
 export interface ICreateTagProps {}
 
@@ -98,15 +100,25 @@ export default function EditTag(props: ICreateTagProps) {
           mb={3}
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
+            width: "100%",
           }}
         >
-          <Box component="span">Public</Box>
-          <Switch
-            defaultChecked={data?.is_public}
-            onChange={handleChangePublic}
-          />
+          <Box>
+            <Link to={`/tags`}>
+              <IconButton>
+                <ArrowBackOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Box>
+          <Box>
+            <Box component="span">Public</Box>
+            <Switch
+              defaultChecked={data?.is_public}
+              onChange={handleChangePublic}
+            />
+          </Box>
         </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           {data && (

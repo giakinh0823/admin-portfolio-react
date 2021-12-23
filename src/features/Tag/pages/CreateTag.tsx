@@ -5,7 +5,9 @@ import TextField from "@mui/material/TextField";
 import { useCreateTag } from "../../../hooks/tag/useCreateTag";
 import { toast } from "react-toastify";
 import ButtonPrimary from "../../../components/button/ButtonPrimary";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import IconButton from '@mui/material/IconButton';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 
 export interface ICreateTagProps {}
 
@@ -45,6 +47,23 @@ export default function CreateTag(props: ICreateTagProps) {
           padding: "40px 50px",
         }}
       >
+        <Box
+          mb={2}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Box>
+            <Link to={`/tags`}>
+              <IconButton>
+                <ArrowBackOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Box>
+        </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
             id="Tag"
