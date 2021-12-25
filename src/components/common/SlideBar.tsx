@@ -29,7 +29,10 @@ const Sidebar = ({ showSlideBar, onCloseShowSlide }: SidebarProps) => {
             md: "fixed",
             lg: "relative",
           },
-          width: showSlideBar ? "250px" : 0,
+          width: {
+            md: undefined,
+            lg: showSlideBar ? "250px" : 0,
+          },
           flexShrink: 0,
           backgroundColor: "white",
           zIndex: (theme: any) => theme.zIndex.drawer + 2,
