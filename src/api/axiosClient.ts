@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const baseURL = "https://hagiakinh-api.herokuapp.com";
+const baseURL = "https://api.hagiakinh.me";
 
 
 const axiosClient = axios.create({
