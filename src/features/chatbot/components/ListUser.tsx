@@ -1,19 +1,26 @@
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import {
-    Box, List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText, Stack, Typography
+  Box,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Stack,
+  Typography,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../../app/hook";
+import { selectUser } from "../../Auth/authSlice";
 
+export interface IChatbotCustomerProps {
+  chatbots: any[] | undefined;
+}
 
-export interface IChatbotCustomerProps {}
-
-export default function ListUser(props: IChatbotCustomerProps) {
+export default function ListUser({ chatbots }: IChatbotCustomerProps) {
+  const user = useAppSelector(selectUser);
 
   return (
     <Box
@@ -52,47 +59,69 @@ export default function ListUser(props: IChatbotCustomerProps) {
           padding: "20px 0px",
         }}
       >
-        <Link
-          to={`/chatbot/19d2a3fa-4baa-4865-b84f-b430de4f525b`}
-          style={{
-            textDecoration: "none",
-            display: "block",
-            color: "black",
-          }}
-        >
-          <ListItem
-            alignItems="center"
-            sx={{
-              borderRadius: "10px",
-              "&:hover": {
-                backgroundColor: "#3c6af41c",
-              },
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar
-                alt="Remy Sharp"
-                src="https://res.cloudinary.com/giakinh0823/image/upload/v1640164105/wsomn31zjodit3s350iu.webp"
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary="Hà Gia Kính"
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    sx={{ display: "inline" }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    23-08-2001 -
-                  </Typography>
-                  {" Bạn có cho thuê api không ?"}
-                </React.Fragment>
-              }
-            />
-          </ListItem>
-        </Link>
+        {chatbots &&
+          chatbots.map((chatbot: any) => {
+            const user_message = chatbot?.users.filter(
+              (item: any) => item.id !== user.id
+            )[0];
+            return (
+              <Link
+                key={chatbot.id}
+                to={`/chatbot/${chatbot.id}`}
+                style={{
+                  textDecoration: "none",
+                  display: "block",
+                  color: "black",
+                }}
+              >
+                <ListItem
+                  alignItems="center"
+                  sx={{
+                    borderRadius: "10px",
+                    "&:hover": {
+                      backgroundColor: "#3c6af41c",
+                    },
+                  }}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="https://res.cloudinary.com/giakinh0823/image/upload/v1640164105/wsomn31zjodit3s350iu.webp"
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${user_message?.last_name} ${user_message?.first_name}`}
+                    secondary={
+                      <>
+                        <Typography
+                          sx={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                          }}
+                          component="span"
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          {`${new Date(
+                            chatbot?.messages[
+                              chatbot.messages.length - 1
+                            ]?.created_at
+                          ).toDateString()} - `}
+                          {
+                            chatbot?.messages[chatbot.messages.length - 1]
+                              ?.message
+                          }
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+              </Link>
+            );
+          })}
       </List>
     </Box>
   );

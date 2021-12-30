@@ -1,10 +1,9 @@
-import { Blog } from "../models/blog";
 import { ListParams } from "../models/common";
 import axiosClient from "./axiosClient";
 
-const userApi = {
+const chatbotApi = {
   getAll(params: ListParams): Promise<any[]> {
-    const url = "/chatbots";
+    const url = "/chatbots/";
     const access_token = localStorage.getItem("access_token");
     return axiosClient.get(url, {
       params,
@@ -13,7 +12,16 @@ const userApi = {
       },
     });
   },
-  getById(id: string): Promise<Blog> {
+  join(data:any): Promise<any> {
+    const url = "/chatbots/join/";
+    const access_token = localStorage.getItem("access_token");
+    return axiosClient.post(url,data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+  },
+  getById(id: any): Promise<any> {
     const url = `/chatbots/${id}`;
     const access_token = localStorage.getItem("access_token");
     return axiosClient.get(url, {
@@ -22,7 +30,7 @@ const userApi = {
       },
     });
   },
-  add(data: Blog): Promise<Blog> {
+  add(data: any): Promise<any> {
     const url = "/chatbots/";
     const access_token = localStorage.getItem("access_token");
     return axiosClient.post(url, data, {
@@ -31,7 +39,7 @@ const userApi = {
       },
     });
   },
-  remove(id: string): Promise<Blog> {
+  remove(id: string): Promise<any> {
     const url = `/chatbots/${id}`;
     const access_token = localStorage.getItem("access_token");
     return axiosClient.delete(url, {
@@ -40,7 +48,7 @@ const userApi = {
       },
     });
   },
-  update(data: Partial<Blog>): Promise<Blog> {
+  update(data: Partial<any>): Promise<any> {
     const url = `/chatbots/${data.id}`;
     const access_token = localStorage.getItem("access_token");
     return axiosClient.patch(url, data, {
@@ -51,4 +59,4 @@ const userApi = {
   },
 };
 
-export default userApi;
+export default chatbotApi;
