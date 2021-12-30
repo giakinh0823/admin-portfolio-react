@@ -21,10 +21,10 @@ const chatbotApi = {
       },
     });
   },
-  getById(id: any): Promise<any> {
-    const url = `/chatbots/${id}`;
+  getById(id: any, data?: any): Promise<any> {
+    const url = `/chatbots/${id}/`;
     const access_token = localStorage.getItem("access_token");
-    return axiosClient.get(url, {
+    return axiosClient.post(url,data, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },

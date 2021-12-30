@@ -4,6 +4,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { useAppSelector } from "../../../app/hook";
+import { selectUser } from "../../Auth/authSlice";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -37,9 +39,20 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export interface IChatbotCustomerProps {}
+export interface IChatbotCustomerProps {
+  chatbot: any;
+}
 
-export default function InfoUser(props: IChatbotCustomerProps) {
+export default function InfoUser({chatbot}: IChatbotCustomerProps) {
+
+  const user = useAppSelector(selectUser);
+  const [userClient, setUserClient] = React.useState<any>();
+
+  React.useEffect(() => {
+      const userClient = chatbot?.users?.find((item:any) => item.id !== user.id);
+      setUserClient(userClient);
+  } , [user, chatbot]);
+
   return (
     <Box
       sx={{
@@ -47,7 +60,7 @@ export default function InfoUser(props: IChatbotCustomerProps) {
         boxShadow: "rgba(0, 0, 0, 0.08) 0px 4px 12px",
         height: "90vh",
         borderRadius: "20px",
-        width: "350px",
+        width: "300px",
       }}
     >
       <Box
@@ -93,7 +106,7 @@ export default function InfoUser(props: IChatbotCustomerProps) {
       </Box>
       <Box>
         <Typography variant="h5" textAlign="center" mt={3}>
-          Hà Gia Kính
+          {`${userClient?.last_name} ${userClient?.first_name}`}
         </Typography>
       </Box>
     </Box>

@@ -7,8 +7,10 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import chatbotApi from "../../../api/chatbotApi";
 import { useAppSelector } from "../../../app/hook";
+import CrcularProgress from "../../../components/progress/CrcularProgress";
 import useChatbots from "../../../hooks/chatbot/useChatbot";
 import { useChatbotJoin } from "../../../hooks/chatbot/useChatbotJoin";
+import { queryClient } from "../../../lib/query/queryClient";
 import { selectUser } from "../../Auth/authSlice";
 import InfoUser from "../components/InfoUser";
 import ListUser from "../components/ListUser";
@@ -21,21 +23,29 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
   const [message, setMessage] = React.useState<any[]>([]);
   const [join, setJoin] = React.useState<boolean>(false);
   const { register, handleSubmit, reset } = useForm();
+  const [chatbot, setChatbot] = React.useState<any>();
   const messageEndRef = React.useRef<any>();
   const messageBoxRef = React.useRef<any>();
   const user = useAppSelector(selectUser);
   const mutationJoin = useChatbotJoin();
   const navigate = useNavigate();
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     (async () => {
-      const response = await chatbotApi.getById(id);
-      setJoin(Boolean(response?.id));
-      if (response) {
-        setMessage(response?.messages);
-        messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
+      setLoading(true);
+      if (user.id) {
+        const response = await chatbotApi.getById(id, { user_id: user.id });
+        setChatbot(response);
+        setJoin(Boolean(response?.id));
+        setLoading(false);
+        if (response) {
+          setMessage(response?.messages);
+          messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
+        }
       }
     })();
+    queryClient.invalidateQueries("chatbots");
   }, [id, user]);
 
   const handleJoin = React.useCallback(() => {
@@ -70,8 +80,10 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
       JSON.stringify({
         user: user,
         message: data.message,
+        type_message: "string",
       })
     );
+    queryClient.invalidateQueries("chatbots");
     reset();
   };
 
@@ -134,29 +146,44 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
                     width: "100%",
                   }}
                 >
-                  <Box sx={{ marginTop: "auto" }}></Box>
-                  {message.map((item: any, index: number) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        maxWidth: "50%",
-                        backgroundColor: "#0084ff",
-                        color: "white",
-                        padding: "10px 12px",
-                        borderRadius: "14px",
-                        boxShadow: "rgba(0, 0, 0, 0.08) 0px 4px 12px",
-                        marginLeft:
-                          user.id === item.user.id ? "auto" : undefined,
-                        marginRight:
-                          user.id === item.user.id ? undefined : "auto",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      <Typography variant="body1">{item.message}</Typography>
+                  {!loading ? (
+                    <>
+                      <Box sx={{ marginTop: "auto" }}></Box>
+                      {message.map((item: any, index: number) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            maxWidth: "50%",
+                            backgroundColor: "#0084ff",
+                            color: "white",
+                            padding: "10px 12px",
+                            borderRadius: "14px",
+                            boxShadow: "rgba(0, 0, 0, 0.08) 0px 4px 12px",
+                            marginLeft:
+                              user.id === item.user.id ? "auto" : undefined,
+                            marginRight:
+                              user.id === item.user.id ? undefined : "auto",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <Typography variant="body1">
+                            {item.message}
+                          </Typography>
+                        </Box>
+                      ))}
+                      <div ref={messageEndRef}></div>
+                    </>
+                  ) : (
+                    <Box sx={{ 
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                    }}>
+                      <CrcularProgress />
                     </Box>
-                  ))}
+                  )}
                 </Box>
-                <div ref={messageEndRef}></div>
               </Box>
               <Box
                 component="div"
@@ -164,21 +191,23 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
                   width: "100%",
                   height: "fit-content",
                   borderRadius: "20px",
-                  padding: "15px 90px 15px 0",
+                  padding: "0 40px 0 0",
                   boxShadow: "rgba(0, 0, 0, 0.08) 0px 4px 12px",
                   position: "relative",
                 }}
               >
                 {join ? (
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                     <TextField
                       id="message"
                       variant="outlined"
+                      label="Message"
+                      autoComplete="off"
                       fullWidth
                       {...register("message")}
                       sx={{
                         "& input": {
-                          padding: "10px 20px",
+                          padding: "18px 23px",
                         },
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "20px",
@@ -222,7 +251,7 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
           </Box>
         </Box>
         <Box>
-          <InfoUser />
+          <InfoUser chatbot={chatbot} />
         </Box>
       </Stack>
     </Box>

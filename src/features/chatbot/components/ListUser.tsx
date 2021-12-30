@@ -14,6 +14,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../app/hook";
 import { selectUser } from "../../Auth/authSlice";
+import FiberManualRecordRoundedIcon from "@mui/icons-material/FiberManualRecordRounded";
 
 export interface IChatbotCustomerProps {
   chatbots: any[] | undefined;
@@ -29,7 +30,7 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
         boxShadow: "rgba(0, 0, 0, 0.08) 0px 4px 12px",
         height: "90vh",
         borderRadius: "20px",
-        width: "350px",
+        width: "300px",
       }}
     >
       <Box
@@ -90,7 +91,20 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
                     />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={`${user_message?.last_name} ${user_message?.first_name}`}
+                    primary={
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: chatbot?.notis?.find(
+                            (item: any) => item.id === user.id
+                          )
+                            ? "bold"
+                            : undefined,
+                        }}
+                      >
+                        {`${user_message?.last_name} ${user_message?.first_name}`}
+                      </Typography>
+                    }
                     secondary={
                       <>
                         <Typography
@@ -100,6 +114,11 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
                             display: "-webkit-box",
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: "vertical",
+                            fontWeight: chatbot?.notis?.find(
+                              (item: any) => item.id === user.id
+                            )
+                              ? "bold"
+                              : undefined,
                           }}
                           component="span"
                           variant="body2"
@@ -118,6 +137,11 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
                       </>
                     }
                   />
+                  {chatbot?.notis?.find((item: any) => item.id === user.id) ? (
+                    <FiberManualRecordRoundedIcon sx={{ fontSize: "10px" }} />
+                  ) : (
+                    ""
+                  )}
                 </ListItem>
               </Link>
             );
