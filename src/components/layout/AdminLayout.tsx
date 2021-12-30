@@ -5,6 +5,8 @@ import CreateBlog from "../../features/Blog/pages/createBlog";
 import EditBlog from "../../features/Blog/pages/editBlog";
 import Blog from "../../features/Blog/pages/index";
 import TrashBlog from "../../features/Blog/pages/trashBlog";
+import Chatbot from "../../features/chatbot/pages";
+import ChatbotCustomer from "../../features/chatbot/pages/Chatbot";
 import DashBoard from "../../features/Dashboard/pages";
 import Photo from "../../features/Photo/page";
 import Tag from "../../features/Tag/pages";
@@ -37,6 +39,8 @@ export function AdminLayout() {
         <Box component="div" p={3} sx={{ width: "100%" }}>
           <Routes>
             <Route path="/" element={<DashBoard />} />
+            <Route path="/chatbot" element={<Chatbot/>} />
+            <Route path="/chatbot/:id" element={<ChatbotCustomer/>} />
             <Route path="/blogs" element={<Blog />} />
             <Route path="/blogs/create" element={<CreateBlog />} />
             <Route path="/blogs/trash" element={<TrashBlog />} />

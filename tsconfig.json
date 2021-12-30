@@ -21,6 +21,5 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "src/features/Tag/pages/EditTag/.tsx"  ]
+    "src", "index.d.ts"  ]
 }

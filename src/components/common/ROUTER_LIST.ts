@@ -4,6 +4,7 @@ import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 
 import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActualOutlined';
 import TagIcon from '@mui/icons-material/Tag';
@@ -14,6 +15,11 @@ export const ROUTER_LIST = [
     path: "/",
     name: "Dashboard",
     icon: FlutterDashIcon,
+  },
+  {
+    path: "/chatbot",
+    name: "Chatbot",
+    icon: SmartToyOutlinedIcon,
   },
   {
     path: "/blogs",
