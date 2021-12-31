@@ -1,5 +1,6 @@
 import FiberManualRecordRoundedIcon from "@mui/icons-material/FiberManualRecordRounded";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
+import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import {
   Box,
   List,
@@ -13,16 +14,14 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
 import { NavLink } from "react-router-dom";
-import { useAppSelector } from "../../../app/hook";
-import { selectUser } from "../../Auth/authSlice";
 
 export interface IChatbotCustomerProps {
   chatbots: any[] | undefined;
+  user: any;
 }
 
-export default function ListUser({ chatbots }: IChatbotCustomerProps) {
-  const user = useAppSelector(selectUser);
-
+const ListUser = ({ chatbots, user }: IChatbotCustomerProps) => {
+  
   return (
     <Box
       sx={{
@@ -31,25 +30,35 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
         height: "90vh",
         borderRadius: "20px",
         width: "300px",
+        overflowY: "auto",
       }}
     >
       <Box
         sx={{
           width: "100%",
-          padding: "10px 30px 0 10px",
+          padding: "10px 10px 0 10px",
         }}
       >
         <Stack direction="row" justifyContent="space-between">
-          <IconButton
-            sx={{
-              borderRadius: "10px",
-            }}
-          >
-            <KeyboardArrowLeftOutlinedIcon />
-          </IconButton>
-          <Box>
-            <Typography variant="h6">Chat</Typography>
+          <Box sx={{display: "flex", alignItems: "center"}}>
+            <IconButton
+              sx={{
+                borderRadius: "10px",
+              }}
+            >
+              <KeyboardArrowLeftOutlinedIcon />
+            </IconButton>
+            <Box>
+              <Typography variant="h6">Chat</Typography>
+            </Box>
           </Box>
+          <IconButton
+              sx={{
+                borderRadius: "10px",
+              }}
+            >
+              <MapsUgcOutlinedIcon />
+            </IconButton>
         </Stack>
       </Box>
       <List
@@ -61,12 +70,11 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
         }}
       >
         {chatbots &&
-          chatbots.map((chatbot: any) => {
-            const user_message = chatbot?.users.filter(
+          chatbots?.map((chatbot: any) => {
+            const user_message = chatbot?.users?.filter(
               (item: any) => item.id !== user.id
             )[0];
 
-        
             return (
               <NavLink
                 key={chatbot.id}
@@ -128,7 +136,7 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: "vertical",
                             fontWeight: chatbot?.notis?.find(
-                              (item: any) => item.id === user.id
+                              (item: any) => item?.id === user?.id
                             )
                               ? "bold"
                               : undefined,
@@ -139,18 +147,18 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
                         >
                           {`${new Date(
                             chatbot?.messages[
-                              chatbot.messages.length - 1
+                              chatbot?.messages?.length - 1
                             ]?.created_at
                           ).toDateString()} - `}
                           {
-                            chatbot?.messages[chatbot.messages.length - 1]
+                            chatbot?.messages[chatbot?.messages?.length - 1]
                               ?.message
                           }
                         </Typography>
                       </>
                     }
                   />
-                  {chatbot?.notis?.find((item: any) => item.id === user.id) ? (
+                  {chatbot?.notis?.find((item: any) => item?.id === user?.id) ? (
                     <FiberManualRecordRoundedIcon sx={{ fontSize: "10px" }} />
                   ) : (
                     ""
@@ -163,3 +171,6 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
     </Box>
   );
 }
+
+
+export default React.memo(ListUser);

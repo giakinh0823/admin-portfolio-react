@@ -4,5 +4,5 @@ import { ListParams } from "../../models/common";
 
 
 export default function useChatbots(params: ListParams) {
-  return useQuery("chatbots", async () => await chatbotApi.getAll(params));
+  return useQuery<any, Error>("chatbots", async () => await chatbotApi.getAll(params));
 }

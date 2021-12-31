@@ -29,7 +29,14 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
   const user = useAppSelector(selectUser);
   const mutationJoin = useChatbotJoin();
   const navigate = useNavigate();
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [listChatbot, setListChatbot] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    if (chatbots) {
+      setListChatbot(chatbots.data);
+    }
+  }, [chatbots]);
 
   React.useEffect(() => {
     (async () => {
@@ -59,9 +66,30 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
   const chatSocket = React.useMemo(
     () =>
       // new WebSocket(`ws://127.0.0.1:8000/ws/chat/${id ? id : "new-chatbot"}/`),
-      new WebSocket(`wss://hagiakinh-api.herokuapp.com/ws/chat/${id ? id : "new-chatbot"}/`),
+      new WebSocket(
+        `wss://hagiakinh-api.herokuapp.com/ws/chat/${id ? id : "new-chatbot"}/`
+      ),
     [id]
   );
+
+  const groupsSocket = React.useMemo(
+    () =>
+      // new WebSocket(`ws://127.0.0.1:8000/ws/groups/${user.username}/`),
+      new WebSocket(
+        `wss://hagiakinh-api.herokuapp.com/ws/groups/${user.username}/`
+      ),
+    [user]
+  );
+
+  React.useEffect(() => {
+    groupsSocket.onmessage = (e) => {
+      queryClient.invalidateQueries("chatbots");
+    };
+
+    groupsSocket.onclose = function (e) {
+      console.error("Out chatbot");
+    };
+  }, [groupsSocket, listChatbot]);
 
   React.useEffect(() => {
     chatSocket.onmessage = function (e) {
@@ -92,7 +120,7 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
     <Box>
       <Stack direction="row" spacing={1}>
         <Box>
-          <ListUser chatbots={chatbots?.data} />
+          {listChatbot && <ListUser chatbots={listChatbot} user={user} />}
         </Box>
         <Box
           sx={{
@@ -101,7 +129,7 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
             boxShadow: "rgba(0, 0, 0, 0.08) 0px 4px 12px",
             height: "90vh",
             borderRadius: "20px",
-            minWidth: "600px",
+            minWidth: "500px",
             position: "relative",
           }}
         >
@@ -154,7 +182,7 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
                         <Box
                           key={index}
                           sx={{
-                            maxWidth: "50%",
+                            maxWidth: "75%",
                             backgroundColor: "#0084ff",
                             color: "white",
                             padding: "10px 12px",
@@ -175,12 +203,14 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
                       <div ref={messageEndRef}></div>
                     </>
                   ) : (
-                    <Box sx={{ 
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "100%",
-                    }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                      }}
+                    >
                       <CrcularProgress />
                     </Box>
                   )}
