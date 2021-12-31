@@ -58,7 +58,8 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
 
   const chatSocket = React.useMemo(
     () =>
-      new WebSocket(`ws://127.0.0.1:8000/ws/chat/${id ? id : "new-chatbot"}/`),
+      // new WebSocket(`ws://127.0.0.1:8000/ws/chat/${id ? id : "new-chatbot"}/`),
+      new WebSocket(`wss://hagiakinh-api.herokuapp.com//ws/chat/${id ? id : "new-chatbot"}/`),
     [id]
   );
 
