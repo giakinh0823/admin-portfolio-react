@@ -1,3 +1,4 @@
+import FiberManualRecordRoundedIcon from "@mui/icons-material/FiberManualRecordRounded";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import {
   Box,
@@ -6,15 +7,14 @@ import {
   ListItemAvatar,
   ListItemText,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAppSelector } from "../../../app/hook";
 import { selectUser } from "../../Auth/authSlice";
-import FiberManualRecordRoundedIcon from "@mui/icons-material/FiberManualRecordRounded";
 
 export interface IChatbotCustomerProps {
   chatbots: any[] | undefined;
@@ -65,23 +65,36 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
             const user_message = chatbot?.users.filter(
               (item: any) => item.id !== user.id
             )[0];
+
+        
             return (
-              <Link
+              <NavLink
                 key={chatbot.id}
                 to={`/chatbot/${chatbot.id}`}
-                style={{
-                  textDecoration: "none",
-                  display: "block",
-                  color: "black",
+                style={({ isActive }) => {
+                  return {
+                    display: "block",
+                    textDecoration: "none",
+                    color: "black",
+                    boxShadow: isActive
+                      ? "rgba(149, 157, 165, 0.2) 0px 8px 24px"
+                      : undefined,
+                    fontWeight: "bold",
+                    backgroundColor: isActive
+                      ? "rgb(55 102 244 / 10%)"
+                      : undefined,
+                    borderRadius: "15px",
+                    "&:hover": {
+                      color: "black",
+                      backgroundColor: "rgb(55 102 244 / 10%)",
+                    },
+                  };
                 }}
               >
                 <ListItem
                   alignItems="center"
                   sx={{
                     borderRadius: "10px",
-                    "&:hover": {
-                      backgroundColor: "#3c6af41c",
-                    },
                   }}
                 >
                   <ListItemAvatar>
@@ -143,7 +156,7 @@ export default function ListUser({ chatbots }: IChatbotCustomerProps) {
                     ""
                   )}
                 </ListItem>
-              </Link>
+              </NavLink>
             );
           })}
       </List>
