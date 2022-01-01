@@ -51,6 +51,7 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
         }
       }
       setLoading(false);
+      messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
     })();
     queryClient.invalidateQueries("chatbots");
   }, [id, user.id]);
