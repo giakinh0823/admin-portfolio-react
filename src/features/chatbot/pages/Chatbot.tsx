@@ -53,7 +53,7 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
       setLoading(false);
     })();
     queryClient.invalidateQueries("chatbots");
-  }, [id]);
+  }, [id, user.id]);
 
   const handleJoin = React.useCallback(() => {
     setJoin(true);
