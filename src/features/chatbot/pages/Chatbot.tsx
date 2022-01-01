@@ -45,15 +45,15 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
         const response = await chatbotApi.getById(id, { user_id: user.id });
         setChatbot(response);
         setJoin(Boolean(response?.id));
-        setLoading(false);
         if (response) {
           setMessage(response?.messages);
           messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
         }
       }
+      setLoading(false);
     })();
     queryClient.invalidateQueries("chatbots");
-  }, [id, user]);
+  }, [id]);
 
   const handleJoin = React.useCallback(() => {
     setJoin(true);
