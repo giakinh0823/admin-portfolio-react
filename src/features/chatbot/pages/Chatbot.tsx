@@ -117,7 +117,6 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
     reset();
   };
 
-
   if (loading) {
     return (
       <Box
