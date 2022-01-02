@@ -117,22 +117,6 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
     reset();
   };
 
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          minHeight: "50vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CrcularProgress />
-      </Box>
-    );
-  }
-
   return (
     <Box>
       <Stack direction="row" spacing={1}>
