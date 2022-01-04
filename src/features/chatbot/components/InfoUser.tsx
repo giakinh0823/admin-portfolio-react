@@ -1,6 +1,11 @@
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import {
-    Avatar, Badge, Box, IconButton, Stack, Typography
+  Avatar,
+  Badge,
+  Box,
+  IconButton,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -43,15 +48,14 @@ export interface IChatbotCustomerProps {
   chatbot: any;
 }
 
-export default function InfoUser({chatbot}: IChatbotCustomerProps) {
-
+export default function InfoUser({ chatbot }: IChatbotCustomerProps) {
   const user = useAppSelector(selectUser);
   const [userClient, setUserClient] = React.useState<any>();
 
   React.useEffect(() => {
-      const userClient = chatbot?.users?.find((item:any) => item.id !== user.id);
-      setUserClient(userClient);
-  } , [user, chatbot]);
+    const userClient = chatbot?.users?.find((item: any) => item.id !== user.id);
+    setUserClient(userClient);
+  }, [user, chatbot]);
 
   return (
     <Box
@@ -105,9 +109,11 @@ export default function InfoUser({chatbot}: IChatbotCustomerProps) {
         </StyledBadge>
       </Box>
       <Box>
-        <Typography variant="h5" textAlign="center" mt={3}>
-          {`${userClient?.last_name} ${userClient?.first_name}`}
-        </Typography>
+        {userClient && (
+          <Typography variant="h5" textAlign="center" mt={3}>
+            {`${userClient?.last_name} ${userClient?.first_name}`}
+          </Typography>
+        )}
       </Box>
     </Box>
   );
