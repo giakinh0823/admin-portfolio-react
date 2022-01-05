@@ -32,6 +32,13 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [listChatbot, setListChatbot] = React.useState<any[]>([]);
 
+  const ws_schema = window.location.protocol === "https:" ? "wss" : "ws";
+  const hots =
+    window.location.protocol === "https:"
+      ? "hagiakinh-api.herokuapp.com"
+      : "127.0.0.1:8000";
+  const socket_url = `${ws_schema}://${hots}`;
+
   React.useEffect(() => {
     if (chatbots) {
       setListChatbot(chatbots.data);
@@ -65,21 +72,13 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
   }, [mutationJoin, user, navigate]);
 
   const chatSocket = React.useMemo(
-    () =>
-      // new WebSocket(`ws://127.0.0.1:8000/ws/chat/${id ? id : "new-chatbot"}/`),
-      new WebSocket(
-        `wss://hagiakinh-api.herokuapp.com/ws/chat/${id ? id : "new-chatbot"}/`
-      ),
-    [id]
+    () => new WebSocket(`${socket_url}m/ws/chat/${id ? id : "new-chatbot"}/`),
+    [id, socket_url]
   );
 
   const groupsSocket = React.useMemo(
-    () =>
-      // new WebSocket(`ws://127.0.0.1:8000/ws/groups/${user.username}/`),
-      new WebSocket(
-        `wss://hagiakinh-api.herokuapp.com/ws/groups/${user.username}/`
-      ),
-    [user]
+    () => new WebSocket(`${socket_url}/ws/groups/${user.username}/`),
+    [user, socket_url]
   );
 
   React.useEffect(() => {
