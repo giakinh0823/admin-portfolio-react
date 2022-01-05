@@ -35,13 +35,14 @@
     "redux-saga": "^1.1.3",
     "rehype-raw": "^6.1.0",
     "remark-gfm": "^3.0.1",
+    "serve": "^13.0.2",
     "typescript": "^4.4.2",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false serve -s build",
     "winBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
