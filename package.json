@@ -41,9 +41,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "serve -s build",
     "build": "GENERATE_SOURCEMAP=false serve -s build",
-    "winBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "winBuild": "set \"GENERATE_SOURCEMAP=false\" && serve -s build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
