@@ -72,7 +72,7 @@ export default function ChatbotCustomer(props: IChatbotCustomerProps) {
   }, [mutationJoin, user, navigate]);
 
   const chatSocket = React.useMemo(
-    () => new WebSocket(`${socket_url}m/ws/chat/${id ? id : "new-chatbot"}/`),
+    () => new WebSocket(`${socket_url}/ws/chat/${id ? id : "new-chatbot"}/`),
     [id, socket_url]
   );
 
